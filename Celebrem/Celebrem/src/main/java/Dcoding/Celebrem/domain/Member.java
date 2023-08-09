@@ -1,5 +1,6 @@
 package Dcoding.Celebrem.domain;
 
+import Dcoding.Celebrem.dto.member.MemberCreateResponseDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -45,5 +46,9 @@ public class Member {
                 member.password,
                 Collections.singleton(grantedAuthority)
         );
+    }
+
+    public static MemberCreateResponseDto of(Member member) {
+        return new MemberCreateResponseDto(member.email, member.name, member.authority.toString());
     }
 }

@@ -1,6 +1,6 @@
 package Dcoding.Celebrem.jwt;
 
-import Dcoding.Celebrem.dto.token.TokenDto;
+import Dcoding.Celebrem.dto.token.token.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

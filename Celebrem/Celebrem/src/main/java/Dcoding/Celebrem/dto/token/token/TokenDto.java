@@ -1,4 +1,4 @@
-package Dcoding.Celebrem.dto.token;
+package Dcoding.Celebrem.dto.token.token;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
