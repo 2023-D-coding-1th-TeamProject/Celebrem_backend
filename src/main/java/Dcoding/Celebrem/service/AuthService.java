@@ -3,6 +3,7 @@ package Dcoding.Celebrem.service;
 import Dcoding.Celebrem.domain.Member;
 import Dcoding.Celebrem.dto.member.MemberCreateRequestDto;
 import Dcoding.Celebrem.dto.member.MemberCreateResponseDto;
+import Dcoding.Celebrem.dto.member.MemberPasswordUpdateRequestDto;
 import Dcoding.Celebrem.dto.token.LoginDto;
 import Dcoding.Celebrem.dto.token.token.TokenDto;
 import Dcoding.Celebrem.dto.token.token.TokenRequestDto;
@@ -28,6 +29,14 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
+    public boolean checkEmailDuplicated(String email){
+        return memberRepository.existsMemberByEmail(email);
+    }
+
+    public boolean checkNicknameDuplicated(String name){
+        return memberRepository.existsByName(name);
+    }
+
     @Transactional
     public MemberCreateResponseDto memberSignup(MemberCreateRequestDto memberCreateRequestDto) {
         if (memberRepository.existsMemberByEmail(memberCreateRequestDto.getUsername())) {
@@ -43,6 +52,17 @@ public class AuthService {
         UsernamePasswordAuthenticationToken authenticationToken = loginDto.toAuthentication();
 
         return getToken(authenticationToken);
+    }
+
+    public Boolean updatePassword(Member member, MemberPasswordUpdateRequestDto memberPasswordUpdateRequestDto){
+        String encodedPassword = passwordEncoder.encode(memberPasswordUpdateRequestDto.getOriginalPassword());
+        String updatedPassword = memberPasswordUpdateRequestDto.getUpdatedPassword();
+
+        if(member.checkPassword(encodedPassword)){
+            member.updatePassword(passwordEncoder.encode(updatedPassword));
+            return true;
+        }
+        return false;
     }
 
     public TokenDto getToken(UsernamePasswordAuthenticationToken authenticationToken){

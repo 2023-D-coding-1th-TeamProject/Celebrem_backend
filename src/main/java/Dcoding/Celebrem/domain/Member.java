@@ -28,15 +28,19 @@ public class Member {
     @Column(nullable = false)
     private String name;
 
+    @Column
+    private String description;
+
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
     @Builder
-    public Member(String email, String password, String name, Authority authority){
+    public Member(String email, String password, String name, String description, Authority authority){
         this.email = email;
         this.password = password;
         this.name = name;
         this.authority = authority;
+        this.description = description;
     }
 
     public static User memberToUser(Member member){
@@ -50,5 +54,16 @@ public class Member {
 
     public static MemberCreateResponseDto of(Member member) {
         return new MemberCreateResponseDto(member.email, member.name, member.authority.toString());
+    }
+
+    public void updatePassword(String updatedPassword){
+        this.password = updatedPassword;
+    }
+
+    public boolean checkPassword(String password){
+        if(this.password == password){
+            return true;
+        }
+        return false;
     }
 }

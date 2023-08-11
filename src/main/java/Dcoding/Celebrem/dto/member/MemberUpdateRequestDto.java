@@ -2,8 +2,6 @@ package Dcoding.Celebrem.dto.member;
 
 import lombok.*;
 
-import java.util.List;
-
 @Getter
 @Setter
 @Builder
@@ -12,8 +10,6 @@ import java.util.List;
 public class MemberUpdateRequestDto {
 
     private String name;
-    private List<String> categories;
-    private String originalPassword;
-    private String updatedPassword;
+    private String profile;
 
 }

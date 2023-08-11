@@ -21,6 +21,17 @@ public class AuthController {
     private final AuthService authService;
     private final TokenProvider jwtTokenProvider;
 
+    @GetMapping("/user-emails/{email}/exists")
+    public ResponseEntity<Boolean> checkEmailDuplicated(@PathVariable String email){
+        return ResponseEntity.ok(authService.checkEmailDuplicated(email));
+    }
+
+    @GetMapping("/user-names/{name}/exists")
+    public ResponseEntity<Boolean> checkNameDuplicated(@PathVariable String name){
+        return ResponseEntity.ok(authService.checkNicknameDuplicated(name));
+    }
+
+
     @PostMapping("/signup")
     public ResponseEntity<MemberCreateResponseDto> memberSignup(@RequestBody MemberCreateRequestDto memberCreateRequestDto) {
         return ResponseEntity.ok(authService.memberSignup(memberCreateRequestDto));

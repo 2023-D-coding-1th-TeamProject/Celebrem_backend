@@ -2,8 +2,6 @@ package Dcoding.Celebrem.dto.member;
 
 import lombok.*;
 
-import java.util.List;
-
 @Getter
 @Setter
 @Builder
@@ -12,5 +10,4 @@ import java.util.List;
 public class MemberUpdateResponseDto {
     private String email;
     private String name;
-    private List<String> categories;
 }
