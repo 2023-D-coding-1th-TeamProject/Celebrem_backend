@@ -12,7 +12,4 @@ public class MemberCreateResponseDto {
     private String name;
     private String authority;
 
-
-
-
 }

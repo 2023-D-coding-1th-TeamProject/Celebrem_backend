@@ -1,7 +1,7 @@
 package Dcoding.Celebrem.dto.member;
 
-import Dcoding.Celebrem.domain.Authority;
-import Dcoding.Celebrem.domain.Member;
+import Dcoding.Celebrem.domain.member.Authority;
+import Dcoding.Celebrem.domain.member.Member;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +28,5 @@ public class MemberCreateRequestDto {
                 .authority(Authority.ROLE_USER)
                 .build();
     }
-
 
 }

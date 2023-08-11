@@ -1,5 +1,6 @@
-package Dcoding.Celebrem.domain;
+package Dcoding.Celebrem.domain.member;
 
+import Dcoding.Celebrem.domain.base.BaseEntity;
 import Dcoding.Celebrem.dto.member.MemberCreateResponseDto;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -8,12 +9,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 @Entity
 @NoArgsConstructor
-@Table(name = "member")
-public class Member {
+public class Member extends BaseEntity {
+
     @Id
     @Column(name ="member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,20 +24,26 @@ public class Member {
     @Column(nullable = false)
     private String email;
 
+    private String phoneNumber;
+
     @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
-    private String name;
+    private String nickname;
+
+    private LocalDateTime lastLogin;
+
+    private LocalDateTime withdrawalAt;
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
     @Builder
-    public Member(String email, String password, String name, Authority authority){
+    public Member(String email, String password, String nickname, Authority authority){
         this.email = email;
         this.password = password;
-        this.name = name;
+        this.nickname = nickname;
         this.authority = authority;
     }
 
@@ -49,6 +57,6 @@ public class Member {
     }
 
     public static MemberCreateResponseDto of(Member member) {
-        return new MemberCreateResponseDto(member.email, member.name, member.authority.toString());
+        return new MemberCreateResponseDto(member.email, member.nickname, member.authority.toString());
     }
 }

@@ -1,6 +1,6 @@
 package Dcoding.Celebrem.service;
 
-import Dcoding.Celebrem.domain.Member;
+import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
