@@ -11,11 +11,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 @NoArgsConstructor
 public class LoginDto {
     @NotNull
-    private String username;
+    private String email;
     @NotNull
     private String password;
 
     public UsernamePasswordAuthenticationToken toAuthentication() {
-        return new UsernamePasswordAuthenticationToken(username, password);
+        return new UsernamePasswordAuthenticationToken(email, password);
     }
 }
