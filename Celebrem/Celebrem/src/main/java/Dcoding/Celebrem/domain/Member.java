@@ -14,6 +14,7 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
+    private String nickname;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_id")
