@@ -18,14 +18,15 @@ public class MemberCreateRequestDto {
     private String username;
     @NotNull
     private String password;
-    private String name;
+    private String nickname;
+    private String phoneNumber;
     private List<String> categories;
     public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .email(username)
                 .password(passwordEncoder.encode(password))
-                .name(name)
-                .authority(Authority.ROLE_USER)
+                .nickname(nickname)
+                .phoneNumber(phoneNumber)
                 .build();
     }
 

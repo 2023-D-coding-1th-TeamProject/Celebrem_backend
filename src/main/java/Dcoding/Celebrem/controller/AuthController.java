@@ -22,8 +22,9 @@ public class AuthController {
     private final TokenProvider jwtTokenProvider;
 
     @PostMapping("/signup")
-    public ResponseEntity<MemberCreateResponseDto> memberSignup(@RequestBody MemberCreateRequestDto memberCreateRequestDto) {
-        return ResponseEntity.ok(authService.memberSignup(memberCreateRequestDto));
+    public ResponseEntity<Void> memberSignup(@RequestBody MemberCreateRequestDto memberCreateRequestDto) {
+        authService.memberSignup(memberCreateRequestDto);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/login")

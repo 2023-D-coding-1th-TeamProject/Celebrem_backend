@@ -1,5 +1,6 @@
 package Dcoding.Celebrem.domain.likes;
 
+import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.domain.member.Profile;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
