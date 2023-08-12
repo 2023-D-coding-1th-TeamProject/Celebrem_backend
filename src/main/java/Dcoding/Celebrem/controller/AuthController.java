@@ -1,7 +1,6 @@
 package Dcoding.Celebrem.controller;
 
 import Dcoding.Celebrem.dto.member.MemberCreateRequestDto;
-import Dcoding.Celebrem.dto.member.MemberCreateResponseDto;
 import Dcoding.Celebrem.dto.token.LoginDto;
 import Dcoding.Celebrem.dto.token.token.TokenDto;
 import Dcoding.Celebrem.dto.token.token.TokenRequestDto;

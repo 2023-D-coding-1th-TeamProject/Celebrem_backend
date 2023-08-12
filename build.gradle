@@ -44,6 +44,7 @@ dependencies {
 	testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
 
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 }
 
 ext {
@@ -83,16 +84,3 @@ bootJar {
 	dependsOn moveDocument
 }
 
-
-//asciidoctor {
-//	inputs.dir snippetsDir
-//	configurations 'asciidoctorExtensions'
-//	dependsOn test
-//}
-//
-
-//
-//tasks.named('test') {
-//	useJUnitPlatform()
-//}
-//
