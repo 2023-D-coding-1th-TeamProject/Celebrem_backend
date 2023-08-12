@@ -12,10 +12,6 @@ import java.time.LocalDateTime;
 @Getter
 public abstract class BaseEntity {
 
-    public enum Status {
-        NORMAL, EXPIRED;
-    }
-
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdDate;
@@ -23,15 +19,4 @@ public abstract class BaseEntity {
     @LastModifiedDate
     private LocalDateTime lastModifiedDate;
 
-    @Enumerated(value = EnumType.STRING)
-    private Status status;
-
-    @PrePersist
-    public void init() {
-        this.status = Status.NORMAL;
-    }
-
-    public void expired() {
-        this.status = Status.EXPIRED;
-    }
 }

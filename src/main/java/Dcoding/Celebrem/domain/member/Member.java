@@ -5,6 +5,7 @@ import Dcoding.Celebrem.domain.likes.Likes;
 import Dcoding.Celebrem.dto.member.MemberCreateResponseDto;
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +19,7 @@ import static Dcoding.Celebrem.domain.member.Authority.ROLE_USER;
 
 @Entity
 @NoArgsConstructor
+@Getter
 public class Member extends BaseEntity {
 
     @Id
@@ -54,15 +56,6 @@ public class Member extends BaseEntity {
         this.nickname = nickname;
         this.authority = ROLE_USER;
         this.profile = new Profile(email);
-    }
-
-    public static User memberToUser(Member member){
-        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.authority.toString());
-        return new User(
-                String.valueOf(member.id),
-                member.password,
-                Collections.singleton(grantedAuthority)
-        );
     }
 
     public static MemberCreateResponseDto of(Member member) {

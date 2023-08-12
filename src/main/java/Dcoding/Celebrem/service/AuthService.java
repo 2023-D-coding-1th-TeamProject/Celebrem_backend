@@ -2,7 +2,6 @@ package Dcoding.Celebrem.service;
 
 import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.dto.member.MemberCreateRequestDto;
-import Dcoding.Celebrem.dto.member.MemberCreateResponseDto;
 import Dcoding.Celebrem.dto.token.LoginDto;
 import Dcoding.Celebrem.dto.token.token.TokenDto;
 import Dcoding.Celebrem.dto.token.token.TokenRequestDto;
@@ -20,21 +19,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final MemberRepository memberRepository;
 
     @Transactional
-    public MemberCreateResponseDto memberSignup(MemberCreateRequestDto memberCreateRequestDto) {
+    public void memberSignup(MemberCreateRequestDto memberCreateRequestDto) {
         if (memberRepository.existsMemberByEmail(memberCreateRequestDto.getUsername())) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다");
         }
         Member member = memberCreateRequestDto.toMember(passwordEncoder);
-        return Member.of(memberRepository.save(member));
+        memberRepository.save(member);
     }
 
     @Transactional
@@ -64,6 +64,7 @@ public class AuthService {
         // 5. 토큰 발급
         return tokenDto;
     }
+
     @Transactional
     public String logout(String accessToken, User user){
         String username = user.getUsername();

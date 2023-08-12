@@ -1,7 +1,6 @@
 package Dcoding.Celebrem.controller;
 
 import Dcoding.Celebrem.dto.member.MemberCreateRequestDto;
-import Dcoding.Celebrem.dto.member.MemberCreateResponseDto;
 import Dcoding.Celebrem.dto.token.LoginDto;
 import Dcoding.Celebrem.dto.token.token.TokenDto;
 import Dcoding.Celebrem.dto.token.token.TokenRequestDto;
@@ -22,8 +21,9 @@ public class AuthController {
     private final TokenProvider jwtTokenProvider;
 
     @PostMapping("/signup")
-    public ResponseEntity<MemberCreateResponseDto> memberSignup(@RequestBody MemberCreateRequestDto memberCreateRequestDto) {
-        return ResponseEntity.ok(authService.memberSignup(memberCreateRequestDto));
+    public ResponseEntity<Void> memberSignup(@RequestBody MemberCreateRequestDto memberCreateRequestDto) {
+        authService.memberSignup(memberCreateRequestDto);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/login")
