@@ -49,13 +49,13 @@ public class Member extends BaseEntity {
     private List<Likes> likes = new ArrayList<>();
 
     @Builder
-    public Member(String email, String phoneNumber, String password, String nickname){
+    public Member(String email, String phoneNumber, String password, String nickname, Profile profile){
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.nickname = nickname;
         this.authority = ROLE_USER;
-        this.profile = new Profile(email);
+        this.profile = profile;
     }
 
     public static MemberCreateResponseDto of(Member member) {

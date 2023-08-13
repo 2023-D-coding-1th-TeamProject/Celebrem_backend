@@ -28,9 +28,12 @@ public class AuthService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
 
+    /**
+     * 이메일 중복 검사 + 닉네임 중복검사 메소드로 나눌 필요
+     */
     @Transactional
     public void memberSignup(MemberCreateRequestDto memberCreateRequestDto) {
-        if (memberRepository.existsMemberByEmail(memberCreateRequestDto.getUsername())) {
+        if (memberRepository.existsMemberByEmail(memberCreateRequestDto.getUserName())) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다");
         }
         Member member = memberCreateRequestDto.toMember(passwordEncoder);
@@ -39,12 +42,15 @@ public class AuthService {
 
     @Transactional
     public TokenDto memberLogin(LoginDto loginDto) {
-        // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
+        // 1. Login ID/PW 를 기반으로 인증 객체인 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = loginDto.toAuthentication();
 
         return getToken(authenticationToken);
     }
 
+    /**
+     * JWT 토큰 생성
+     */
     public TokenDto getToken(UsernamePasswordAuthenticationToken authenticationToken){
         // 2. 실제로 검증 (사용자 비밀번호 체크) 이 이루어지는 부분
         //    authenticate 메서드가 실행이 될 때 CustomUserDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨
@@ -104,4 +110,5 @@ public class AuthService {
         // 토큰 발급
         return tokenDto;
     }
+
 }

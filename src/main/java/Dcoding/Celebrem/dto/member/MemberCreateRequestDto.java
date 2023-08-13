@@ -15,15 +15,16 @@ import java.util.List;
 @NoArgsConstructor
 public class MemberCreateRequestDto {
     @NotNull
-    private String username;
+    private String userName;
     @NotNull
     private String password;
     private String nickname;
     private String phoneNumber;
     private List<String> categories;
+
     public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
-                .email(username)
+                .email(userName)
                 .password(passwordEncoder.encode(password))
                 .nickname(nickname)
                 .phoneNumber(phoneNumber)

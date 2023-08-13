@@ -19,15 +19,13 @@ public class Profile extends BaseEntity {
 
     private String profileImageUrl;
 
-    private String email;
-
     private String description;
 
     private String instagramId;
 
     private Long followerCount;
 
-    private Long likeCount;
+    private Long likeCount = 0l;
 
     @OneToOne(mappedBy = "profile", fetch = FetchType.LAZY)
     private Member member;
@@ -36,20 +34,16 @@ public class Profile extends BaseEntity {
     private List<ProfileTag> profileTags = new ArrayList<>();
 
     @Builder
-    public Profile(String instagramId, Long followerCount, String description, Long likeCount) {
+    public Profile(String instagramId, Long followerCount, String description, String profileImageUrl) {
         this.instagramId = instagramId;
         this.followerCount = followerCount;
         this.description = description;
-        this.likeCount = likeCount;
+        this.profileImageUrl = profileImageUrl;
     }
 
-    @Builder
-    public Profile(String email) {
-        this.email = email;
-    }
-
+    //--연관관계 메서드--//
     public void changeProfileImage(String imageUrl) {
         this.profileImageUrl = imageUrl;
     }
-
+    public void changeProfileDescription(String description) { this.description = description; }
 }
