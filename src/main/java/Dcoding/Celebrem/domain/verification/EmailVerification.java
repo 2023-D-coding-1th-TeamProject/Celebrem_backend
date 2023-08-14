@@ -30,7 +30,7 @@ public class EmailVerification {
     }
 
     public String generateCode() {
-        StringBuffer code = new StringBuffer();
+        StringBuilder code = new StringBuilder();
         Random random = new Random();
 
         for (int i = 0; i < CODE_LENGTH; i++) code.append((char) ((int) (random.nextInt(26)) + 65)); //  A~Z

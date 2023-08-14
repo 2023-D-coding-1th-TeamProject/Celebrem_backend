@@ -34,11 +34,14 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 
 	// database
-	runtimeOnly 'com.h2database:h2'
+//	runtimeOnly 'com.h2database:h2'
+	implementation 'mysql:mysql-connector-java:8.0.33'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
 	// test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'junit:junit:'
 
 	// jwt
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
@@ -93,4 +96,3 @@ task moveDocument(type: Copy) {
 bootJar {
 	dependsOn moveDocument
 }
-
