@@ -46,4 +46,19 @@ public class Profile extends BaseEntity {
         this.profileImageUrl = imageUrl;
     }
     public void changeProfileDescription(String description) { this.description = description; }
+
+    //--비즈니스 로직--//
+    /**
+     * 찜 추가
+     */
+    public void increaseLikesCount() {
+        this.likeCount++;
+    }
+
+    /**
+     * 찜 취소
+     */
+    public void decreaseLikesCount() {
+        this.likeCount--;
+    }
 }

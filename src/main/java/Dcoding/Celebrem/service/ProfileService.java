@@ -2,6 +2,7 @@ package Dcoding.Celebrem.service;
 
 import Dcoding.Celebrem.domain.member.Profile;
 import Dcoding.Celebrem.dto.profile.UpdateProfileDto;
+import Dcoding.Celebrem.dto.search.MainSearch;
 import Dcoding.Celebrem.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class ProfileService {
     /**
      *  프로필 업데이트 메소드
      */
+    @Transactional
     public void updateProfile(Long profileId, UpdateProfileDto updateProfileDto){
         Profile profile = findById(profileId);
 
@@ -32,5 +34,13 @@ public class ProfileService {
             return profile.get();
         }
         return null;
+    }
+
+    /**
+     * 인플루언서 목록 가져오기 v2 : 인플루언서 검색 화면에서  태그+이름 검색 -> 동적쿼리
+     * profileService에 구현?
+     */
+    public void findAllByNameTag(MainSearch mainSearch) {
+        return profileRepository.findAllByNameTag(mainSearch);
     }
 }
