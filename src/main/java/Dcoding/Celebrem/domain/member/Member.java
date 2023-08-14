@@ -55,7 +55,7 @@ public class Member extends BaseEntity {
         this.password = password;
         this.nickname = nickname;
         this.authority = ROLE_USER;
-        this.profile = new Profile(email);
+        this.profile = new Profile();
     }
 
     public static MemberCreateResponseDto of(Member member) {
