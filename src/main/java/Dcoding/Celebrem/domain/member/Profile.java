@@ -1,6 +1,7 @@
 package Dcoding.Celebrem.domain.member;
 
 import Dcoding.Celebrem.domain.base.BaseEntity;
+import Dcoding.Celebrem.domain.likes.Likes;
 import Dcoding.Celebrem.domain.tag.ProfileTag;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -51,14 +52,14 @@ public class Profile extends BaseEntity {
     /**
      * 찜 추가
      */
-    public void increaseLikesCount() {
-        this.likeCount++;
+    public Long increaseLikesCount() {
+        return ++likeCount;
     }
 
     /**
      * 찜 취소
      */
-    public void decreaseLikesCount() {
-        this.likeCount--;
+    public Long decreaseLikesCount() {
+        return --likeCount;
     }
 }

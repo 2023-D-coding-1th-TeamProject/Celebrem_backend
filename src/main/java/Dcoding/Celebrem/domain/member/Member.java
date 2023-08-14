@@ -62,4 +62,7 @@ public class Member extends BaseEntity {
         return new MemberCreateResponseDto(member.email, member.nickname, member.authority.toString());
     }
 
+    public String authorityToString(){
+        return this.authority.toString();
+    }
 }

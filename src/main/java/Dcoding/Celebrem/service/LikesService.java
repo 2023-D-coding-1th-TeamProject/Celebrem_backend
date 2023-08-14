@@ -3,15 +3,18 @@ package Dcoding.Celebrem.service;
 import Dcoding.Celebrem.domain.likes.Likes;
 import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.domain.member.Profile;
-import Dcoding.Celebrem.dto.search.LikesSearch;
-import Dcoding.Celebrem.dto.search.MainSearch;
 import Dcoding.Celebrem.repository.LikesRepository;
 import Dcoding.Celebrem.repository.MemberRepository;
 import Dcoding.Celebrem.repository.ProfileRepository;
+import Dcoding.Celebrem.util.SecurityUtil;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,6 +25,7 @@ public class LikesService {
     private final LikesRepository likesRepository;
     private final MemberRepository memberRepository;
     private final ProfileRepository profileRepository;
+    private static final Logger logger = LoggerFactory.getLogger(LikesService.class);
 
     /*
     <찜 기능 요구사항>
@@ -41,10 +45,13 @@ public class LikesService {
         Member member = memberRepository.findById(memberId).get();
         Profile profile = profileRepository.findById(profileId).get();
 
-        // 좋아요 생성
+        // 좋아요 생성, +1
         Likes likes = Likes.createLikes(profile, member);
+        Long likesCount = likes.increaseLikesCount();
 
-        return likes.getId();
+        likesRepository.save(likes);
+
+        return likesCount;
     }
 
 
@@ -54,20 +61,22 @@ public class LikesService {
      * Profile Entity -> likesCount--
      */
     @Transactional
-    public void cancelLikes(Long likesId) {
+    public Long cancelLikes(Long likesId) {
         Optional<Likes> likes = likesRepository.findById(likesId);
 
-        likes.cancel();
-    }
+        if(!likes.isPresent()) {
+            logger.error("Likes with ID " + likesId + " not found", likesId);
+            throw new EntityNotFoundException("Likes with ID " + likesId + " not found");
+        }
 
+        likesRepository.delete(likes.get());
+        return likes.get().cancelLikes();
+    }
 
     /**
-     * 찜 목록 가져오기 v1 : 프로필 화면에서 이름 검색만
-     * 프로필사진, 닉네임, 날짜?, 좋아요 수, 팔로워 수
-     * fromId(좋아요를 누른 사람)으로 조회해 ToId(인플루언서) 목록을 가져온다.
+     * 찜 목록 반환하기
      */
-    public void findAllByName(LikesSearch likesSearch) {
-        return likesRepository.findAllByName();
+    public List<Likes> findAll(Long memberId){
+        return likesRepository.findByMember_Id(memberId);
     }
-
 }

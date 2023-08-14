@@ -35,15 +35,17 @@ public class Likes {
         likes.profile = profile;
         likes.member = member;
 
-        likes.profile.increaseLikesCount();
+        //Long likesCount = likes.increaseLikesCount();
 
         return likes;
     }
-
+    public Long increaseLikesCount(){
+        return this.profile.increaseLikesCount();
+    }
     /**
      * 찜 취소
      */
-    public void cancel() {
-        getProfile().decreaseLikesCount();
+    public Long cancelLikes() {
+        return this.profile.decreaseLikesCount();
     }
 }

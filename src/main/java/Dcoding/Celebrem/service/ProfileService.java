@@ -28,6 +28,9 @@ public class ProfileService {
         profile.changeProfileDescription(updateProfileDto.getDescription());
     }
 
+    /**
+     * 프로필 반환 메소드
+     */
     public Profile findById(Long profileId) {
         Optional<Profile> profile = profileRepository.findById(profileId);
         if(profile.isPresent()){
@@ -37,10 +40,19 @@ public class ProfileService {
     }
 
     /**
-     * 인플루언서 목록 가져오기 v2 : 인플루언서 검색 화면에서  태그+이름 검색 -> 동적쿼리
+     * 찜 목록 가져오기 v1 : 프로필 화면에서 이름 검색만
+     * 프로필사진, 닉네임, 날짜?, 좋아요 수, 팔로워 수
+     * fromId(좋아요를 누른 사람)으로 조회해 ToId(인플루언서) 목록을 가져온다.
+     */
+    public void findAllByName() {
+        //return likesRepository.findAllByName(likesSearch.getName());
+    }
+
+    /**
+     * 인플루언서 목록 가져오기 v2 : 인플루언서 검색 화면에서  태그+조건 검색 -> 동적쿼리
      * profileService에 구현?
      */
-    public void findAllByNameTag(MainSearch mainSearch) {
-        return profileRepository.findAllByNameTag(mainSearch);
+    public void findAllByName(MainSearch mainSearch) {
+        //return profileRepository.findAllByName(mainSearch);
     }
 }
