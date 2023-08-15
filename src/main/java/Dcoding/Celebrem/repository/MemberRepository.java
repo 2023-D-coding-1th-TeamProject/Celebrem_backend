@@ -1,7 +1,9 @@
 package Dcoding.Celebrem.repository;
 
+import Dcoding.Celebrem.domain.member.Authority;
 import Dcoding.Celebrem.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,5 +16,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Boolean existsMemberByEmail(String email);
 
-    List<Member> findMemberByNickname(String nickname);
+    List<Member> findByAuthorityAndNicknameContaining(Authority authority, String nickname);
 }

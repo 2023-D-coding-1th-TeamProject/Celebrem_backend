@@ -6,6 +6,7 @@ import Dcoding.Celebrem.domain.tag.Tag;
 import Dcoding.Celebrem.dto.profile.UpdateProfileDto;
 import Dcoding.Celebrem.repository.MemberRepository;
 import Dcoding.Celebrem.repository.ProfileRepository;
+import Dcoding.Celebrem.repository.TagRepository;
 import Dcoding.Celebrem.service.ProfileService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +16,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootTest
 @Transactional
@@ -70,6 +74,35 @@ public class ProfileServiceTest {
 
         //then
         Assertions.assertEquals(testProfile, ResultProfile);
+    }
+
+    @DisplayName("registerInfluencerV2(): memberId, instagramId 그리고 tags를 받아 인플루언서 등록을 할 수 있다.")
+    @Test
+    public void registerInfluencerTest() throws Exception {
+        //given
+        Member member = makeMember("testEmail", "010-010", "testPw", "testMember");
+        Tag tag1 = new Tag("스포츠");
+        Tag tag2 = new Tag("교육");
+        Tag tag3 = new Tag("뷰티");
+
+        tagRepository.save(tag1);
+        tagRepository.save(tag2);
+        tagRepository.save(tag3);
+
+        //when
+        profileService.registerInfluencer(1L, "Instagram_test", tag1, tag3);
+
+        Profile profile = profileRepository.findByMember_Id(1L);
+
+        //then
+        Assertions.assertTrue(profile.isInstagramIdSame("Instagram_test"));
+        Assertions.assertTrue(profile.isProfileTagsSame(2));
+    }
+
+    private Member makeMember(String email, String phoneNumber, String password, String nickname) {
+        Member member = new Member(email, phoneNumber, password, nickname, new Profile());
+        memberRepository.save(member);
+        return member;
     }
 
     private Profile makeProfile(String instagramId, long followerCount, String description, String profileUrl) {

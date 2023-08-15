@@ -72,4 +72,19 @@ public class Member extends BaseEntity {
     public String authorityToString(){
         return this.authority.toString();
     }
+
+    //--연관관계 메소드--//
+    public void checkAuthorityToInfluencer() {
+        if (this.authority != ROLE_USER)
+            logger.info("already Influencer!!");
+        this.authority = ROLE_INFLUENCER;
+    }
+
+    //--비즈니스 로직--//
+    /**
+     * 인플루언서 등록 V2
+     */
+    public void registerInfluencer(Profile profile) {
+        this.profile = profile; // 이렇게 하면 안되고, 값만 바꿔줘야 하나?
+    }
 }
