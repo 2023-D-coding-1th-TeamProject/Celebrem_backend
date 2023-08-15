@@ -1,5 +1,6 @@
 package Dcoding.Celebrem.serviceTest;
 
+import Dcoding.Celebrem.domain.member.Authority;
 import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.domain.member.Profile;
 import Dcoding.Celebrem.repository.MemberRepository;
@@ -38,6 +39,16 @@ public class MemberServiceTest {
 
         //then
         Assertions.assertEquals(testMember, resultMember);
+    }
+
+    @Test
+    void findByAuthorityAndNickname(){
+        Profile profile = makeProfile("testId", 100L, "test", "testUrl");
+        Member testMember = makeMember("abc@abc", "010-010", "password", "nickname", profile);
+
+        memberRepository.save(testMember);
+
+        memberRepository.findByAuthorityAndNicknameContaining(Authority.ROLE_USER, "nickname");
     }
 
     private Member makeMember(String email, String phoneNumber, String password, String nickname, Profile profile) {

@@ -84,7 +84,10 @@ public class ProfileService {
      * 인플루언서 목록 가져오기 : 인플루언서 검색 화면에서  태그+조건 검색 -> 동적쿼리
      * profileService에 구현?
      */
+    /*
     public void findAllByName(MainSearch mainSearch) {
         //return profileRepository.findAllByName(mainSearch);
     }
+     */
+
 }
