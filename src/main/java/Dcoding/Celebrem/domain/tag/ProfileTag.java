@@ -29,4 +29,12 @@ public class ProfileTag extends BaseEntity {
         this.tag = tag;
     }
 
+    //--연관관계 메서드--//
+    public void connectTag(Tag tag) {
+        this.tag = tag;
+    }
+
+    public void connectProfile(Profile profile) {
+        this.profile = profile;
+    }
 }

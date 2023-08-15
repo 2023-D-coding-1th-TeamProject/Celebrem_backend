@@ -1,9 +1,12 @@
 package Dcoding.Celebrem.service;
 
+import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.domain.member.Profile;
+import Dcoding.Celebrem.domain.tag.Tag;
 import Dcoding.Celebrem.dto.profile.UpdateProfileDto;
-import Dcoding.Celebrem.dto.search.MainSearch;
+import Dcoding.Celebrem.repository.MemberRepository;
 import Dcoding.Celebrem.repository.ProfileRepository;
+import Dcoding.Celebrem.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +19,29 @@ import java.util.Optional;
 public class ProfileService {
 
     private final ProfileRepository profileRepository;
+    private final MemberRepository memberRepository;
+    private final TagRepository tagRepository;
+
+    /**
+     * 인플루언서 등록하기
+     * user_role -> 받은 정보로 등록
+     * influencer_role -> 이미 등록된 사용자 -> 등록 불가
+     */
+    @Transactional
+    public void registerInfluencer(Long memberId, String instagramId, Tag... tags) {
+        // 엔티티 조회 : member는 빈 profile 객체를 가지고 있는 상태
+        Member member = memberRepository.findById(memberId).get();
+        Profile profile = profileRepository.findByMember_Id(memberId);
+
+        // 인플루언서 등록 가능한 아이디인지 검사
+        member.checkAuthorityToInfluencer();
+
+        // 정보가 입력 된 프로필 객체 생성
+        Profile getProfile = profile.registerInfluencer(instagramId, tags);
+
+        // 등록
+        member.registerInfluencer(getProfile);
+    }
 
     /**
      *  프로필 업데이트 메소드
@@ -23,9 +49,13 @@ public class ProfileService {
     @Transactional
     public void updateProfile(Long profileId, UpdateProfileDto updateProfileDto){
         Profile profile = findById(profileId);
+        List<Tag> updateTags = new ArrayList<>();
 
-        profile.changeProfileImage(updateProfileDto.getProfileImageUrl());
-        profile.changeProfileDescription(updateProfileDto.getDescription());
+        for(String tagName : updateProfileDto.getTagNames()){
+            updateTags.add(tagRepository.findByName(tagName));
+        }
+
+        profile.update(updateProfileDto.getProfileImageUrl(), updateProfileDto.getDescription(), updateProfileDto.getInstagramId(), updateTags);
     }
 
     /**
@@ -49,7 +79,7 @@ public class ProfileService {
     }
 
     /**
-     * 인플루언서 목록 가져오기 v2 : 인플루언서 검색 화면에서  태그+조건 검색 -> 동적쿼리
+     * 인플루언서 목록 가져오기 : 인플루언서 검색 화면에서  태그+조건 검색 -> 동적쿼리
      * profileService에 구현?
      */
     public void findAllByName(MainSearch mainSearch) {

@@ -1,14 +1,17 @@
 package Dcoding.Celebrem.domain.member;
 
 import Dcoding.Celebrem.domain.base.BaseEntity;
-import Dcoding.Celebrem.domain.likes.Likes;
 import Dcoding.Celebrem.domain.tag.ProfileTag;
+import Dcoding.Celebrem.domain.tag.Tag;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Entity
 @NoArgsConstructor
@@ -42,11 +45,56 @@ public class Profile extends BaseEntity {
         this.profileImageUrl = profileImageUrl;
     }
 
+    private static final Logger logger = LoggerFactory.getLogger(Profile.class);
+
     //--연관관계 메서드--//
-    public void changeProfileImage(String imageUrl) {
+    private void changeProfileImage(String imageUrl) {
         this.profileImageUrl = imageUrl;
     }
-    public void changeProfileDescription(String description) { this.description = description; }
+    private void changeProfileDescription(String description) { this.description = description; }
+    private void changeInstagramId(String instagramId) {this.instagramId = instagramId;}
+    private void clearProfileTags() {
+        if (this.profileTags.size() != 0)
+            this.profileTags.clear();
+    }
+
+    private void addProfileTag(ProfileTag profileTag) {
+        profileTags.add(profileTag);
+        profileTag.connectProfile(this);
+    }
+
+    //--Test 메서드--//
+    public Boolean isInstagramIdSame(String instagramId) {
+        if(!this.instagramId.equals(instagramId)) {
+            logger.info("Instagram IDs are different: Expected {}, Actual {}", this.instagramId, instagramId);
+            return false;
+        }
+        return true;
+    }
+
+    public Boolean isProfileTagsSame(int profileTagsSize) {
+        if(this.profileTags.size() != profileTagsSize) {
+            logger.info("Tag Size is different: Expected {}, Actual {}", this.profileTags.size(), profileTagsSize);
+            return false;
+        }
+        return true;
+    }
+
+    public Boolean isProfileImageUrlSame(String profileImageUrl) {
+        if(!this.profileImageUrl.equals(profileImageUrl)) {
+            logger.info("ProfileImageUrl is different: Expected {}, Actual {}", this.profileImageUrl, profileImageUrl);
+            return false;
+        }
+        return true;
+    }
+
+    public Boolean isDescriptionSame(String description) {
+        if(!this.description.equals(description)) {
+            logger.info("Description is different: Expected {}, Actual {}", this.description, description);
+            return false;
+        }
+        return true;
+    }
 
     //--비즈니스 로직--//
     /**
@@ -61,5 +109,32 @@ public class Profile extends BaseEntity {
      */
     public Long decreaseLikesCount() {
         return --likeCount;
+    }
+
+    /**
+     * 인플루언서 등록
+     */
+    public Profile registerInfluencer(String instagramId, Tag... tags) {
+        this.instagramId = instagramId;
+        for (Tag tag : tags) {
+            ProfileTag profileTag = new ProfileTag(this, tag);
+            this.addProfileTag(profileTag);
+        }
+        return this;
+    }
+
+    /**
+     * 프로필 수정(update)
+     */
+    public void update(String profileImageUrl, String description, String instagramId, List<Tag> tags) {
+        this.changeProfileImage(profileImageUrl);
+        this.changeProfileDescription(description);
+        this.changeInstagramId(instagramId);
+        this.clearProfileTags();
+
+        for (Tag tag : tags) {
+            ProfileTag profileTag = new ProfileTag(this, tag);
+            this.addProfileTag(profileTag);
+        }
     }
 }
