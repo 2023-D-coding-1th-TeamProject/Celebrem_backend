@@ -16,8 +16,6 @@ import java.util.Random;
 @Getter
 public class EmailVerification {
 
-    private final int CODE_LENGTH = 8;
-
     @Id @GeneratedValue
     @Column(name = "email_verification_id")
     private Long id;
@@ -30,6 +28,8 @@ public class EmailVerification {
     }
 
     public String generateCode() {
+        final int CODE_LENGTH = 8;
+
         StringBuilder code = new StringBuilder();
         Random random = new Random();
 

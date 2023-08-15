@@ -49,12 +49,15 @@ dependencies {
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
 	// Restdocs
-	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
-	testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
+//	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+//	testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
 
-	// 검증
+	// validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+	// Swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+	
 	// email
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
