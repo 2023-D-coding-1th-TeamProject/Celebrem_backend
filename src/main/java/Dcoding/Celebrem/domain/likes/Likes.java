@@ -1,5 +1,6 @@
 package Dcoding.Celebrem.domain.likes;
 
+import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.domain.member.Profile;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -15,7 +16,7 @@ public class Likes {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_id")
+    @JoinColumn(name = "profil e_id")
     private Profile profile;
 
     @ManyToOne(fetch = FetchType.LAZY)

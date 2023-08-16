@@ -2,12 +2,11 @@ package Dcoding.Celebrem.service;
 
 import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.dto.member.MemberCreateRequestDto;
-import Dcoding.Celebrem.dto.member.MemberCreateResponseDto;
 import Dcoding.Celebrem.dto.token.LoginDto;
 import Dcoding.Celebrem.dto.token.token.TokenDto;
 import Dcoding.Celebrem.dto.token.token.TokenRequestDto;
-import Dcoding.Celebrem.jwt.RefreshToken;
-import Dcoding.Celebrem.jwt.TokenProvider;
+import Dcoding.Celebrem.common.jwt.RefreshToken;
+import Dcoding.Celebrem.common.jwt.TokenProvider;
 import Dcoding.Celebrem.repository.MemberRepository;
 import Dcoding.Celebrem.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,21 +19,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final MemberRepository memberRepository;
 
     @Transactional
-    public MemberCreateResponseDto memberSignup(MemberCreateRequestDto memberCreateRequestDto) {
-        if (memberRepository.existsMemberByEmail(memberCreateRequestDto.getUsername())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다");
-        }
+    public void memberSignup(MemberCreateRequestDto memberCreateRequestDto) {
         Member member = memberCreateRequestDto.toMember(passwordEncoder);
-        return Member.of(memberRepository.save(member));
+        memberRepository.save(member);
+    }
+
+    public void verifyNicknameDuplication(String nickname) {
+        if (memberRepository.existsMemberByNickname(nickname)) {
+            throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
+        }
     }
 
     @Transactional
@@ -64,6 +67,7 @@ public class AuthService {
         // 5. 토큰 발급
         return tokenDto;
     }
+
     @Transactional
     public String logout(String accessToken, User user){
         String username = user.getUsername();
@@ -103,4 +107,7 @@ public class AuthService {
         // 토큰 발급
         return tokenDto;
     }
+
+
+
 }

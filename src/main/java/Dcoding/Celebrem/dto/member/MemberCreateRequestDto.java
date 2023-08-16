@@ -1,12 +1,10 @@
 package Dcoding.Celebrem.dto.member;
 
-import Dcoding.Celebrem.domain.member.Authority;
 import Dcoding.Celebrem.domain.member.Member;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.List;
 
 @Getter
 @Setter
@@ -18,14 +16,14 @@ public class MemberCreateRequestDto {
     private String username;
     @NotNull
     private String password;
-    private String name;
-    private List<String> categories;
+    private String nickname;
+    private String phoneNumber;
     public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .email(username)
                 .password(passwordEncoder.encode(password))
-                .name(name)
-                .authority(Authority.ROLE_USER)
+                .nickname(nickname)
+                .phoneNumber(phoneNumber)
                 .build();
     }
 
