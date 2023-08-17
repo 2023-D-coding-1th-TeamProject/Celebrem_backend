@@ -1,6 +1,5 @@
 package Dcoding.Celebrem.controller;
 
-import Dcoding.Celebrem.dto.tag.ProfileTagSetupReqeustDto;
 import Dcoding.Celebrem.dto.tag.TagSetupRequestDto;
 import Dcoding.Celebrem.service.TagService;
 import lombok.RequiredArgsConstructor;

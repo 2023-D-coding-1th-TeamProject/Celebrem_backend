@@ -7,14 +7,13 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import static Dcoding.Celebrem.domain.member.Authority.ROLE_INFLUENCER;
 import static Dcoding.Celebrem.domain.member.Authority.ROLE_USER;
 
 @Entity
@@ -49,7 +48,7 @@ public class Member extends BaseEntity {
     private List<Likes> likes = new ArrayList<>();
 
     @Builder
-    public Member(String email, String phoneNumber, String password, String nickname){
+    public Member(String email, String phoneNumber, String password, String nickname, Profile profile){
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
@@ -58,8 +57,28 @@ public class Member extends BaseEntity {
         this.profile = new Profile();
     }
 
+    private static final Logger logger = LoggerFactory.getLogger(Profile.class);
+
     public static MemberCreateResponseDto of(Member member) {
         return new MemberCreateResponseDto(member.email, member.nickname, member.authority.toString());
     }
 
+    public String authorityToString(){
+        return this.authority.toString();
+    }
+
+    //--연관관계 메소드--//
+    public void checkAuthorityToInfluencer() {
+        if (this.authority != ROLE_USER)
+            logger.info("already Influencer!!");
+        this.authority = ROLE_INFLUENCER;
+    }
+
+    //--비즈니스 로직--//
+    /**
+     * 인플루언서 등록 V2
+     */
+    public void registerInfluencer(Profile profile) {
+        this.profile = profile; // 이렇게 하면 안되고, 값만 바꿔줘야 하나?
+    }
 }

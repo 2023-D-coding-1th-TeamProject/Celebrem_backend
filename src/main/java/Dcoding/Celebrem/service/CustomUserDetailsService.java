@@ -28,12 +28,16 @@ public class CustomUserDetailsService implements UserDetailsService {
             return optionalMember.map(this::createUserDetails)
                     .orElseThrow(()->new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다."));
         }
+<<<<<<< HEAD
+=======
+        System.out.println("return null");
+>>>>>>> 29237a41c297f52e6443d91aa9c6881b74347e3c
         return null;
     }
 
     // DB 에 User 값이 존재한다면 UserDetails 객체로 만들어서 리턴
     private UserDetails createUserDetails(Member member) {
-        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getAuthority().toString());
+        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.authorityToString());
         return new User(
                 member.getEmail(),
                 member.getPassword(),

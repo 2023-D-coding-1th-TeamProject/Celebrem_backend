@@ -28,29 +28,27 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'junit:junit:4.13.1'
 
-	// lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
 	// database
-//	runtimeOnly 'com.h2database:h2'
-	implementation 'mysql:mysql-connector-java:8.0.33'
+	runtimeOnly 'com.h2database:h2'
+//	implementation 'mysql:mysql-connector-java:8.0.33'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
 	// test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation platform('org.junit:junit-bom:5.9.1')
+	testImplementation 'org.junit.jupiter:junit-jupiter'
 	testImplementation 'junit:junit:'
 
 	// jwt
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
-
-	// Restdocs
-//	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
-//	testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
 
 	// validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -63,39 +61,6 @@ dependencies {
 
 }
 
-ext {
-	set('snippetsDir', file("build/generated-snippets"))
-}
-
-tasks.named('test') {
-	outputs.dir snippetsDir
+test {
 	useJUnitPlatform()
-}
-
-tasks.named('asciidoctor') {
-	configurations "asciidoctorExtensions"
-	inputs.dir snippetsDir
-	dependsOn test
-}
-
-asciidoctor.doFirst {
-	delete file('src/main/resources/static/docs')
-}
-
-task createDocument(type: Copy) {
-	dependsOn asciidoctor
-
-	from file("build/docs/asciidoc")
-	into file("src/main/resources/static/docs")
-}
-
-task moveDocument(type: Copy) {
-	dependsOn createDocument
-
-	from file("build/docs/asciidoc")
-	into file("build/resources/main/static/docs")
-}
-
-bootJar {
-	dependsOn moveDocument
 }
