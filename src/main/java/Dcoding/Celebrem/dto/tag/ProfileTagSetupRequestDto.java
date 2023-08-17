@@ -1,6 +1,6 @@
 package Dcoding.Celebrem.dto.tag;
 
-public class ProfileTagSetupReqeustDto {
+public class ProfileTagSetupRequestDto {
 
     private String tag;
 }

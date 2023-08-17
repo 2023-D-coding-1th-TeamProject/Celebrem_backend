@@ -17,15 +17,4 @@ public class MemberController {
     private final MemberService memberService;
     private final AuthService authService;
 
-    @GetMapping("/me")
-    public ResponseEntity<MemberCreateResponseDto> findCurrentMember(){
-        return ResponseEntity.ok(Member.of(memberService.findMemberById(SecurityUtil.getCurrentMemberId())));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<MemberCreateResponseDto> findMemberById(@PathVariable Long id){
-        return ResponseEntity.ok(Member.of(memberService.findMemberById(id)));
-    }
-
-
 }

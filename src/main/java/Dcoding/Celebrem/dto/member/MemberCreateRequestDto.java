@@ -18,11 +18,6 @@ public class MemberCreateRequestDto {
     private String password;
     private String nickname;
     private String phoneNumber;
-<<<<<<< HEAD
-    private List<String> categories;
-
-=======
->>>>>>> 38da7dc021f815abbde844ff29aeff76c0f95884
     public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .email(userName)
