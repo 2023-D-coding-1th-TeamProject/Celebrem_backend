@@ -1,20 +1,29 @@
 package Dcoding.Celebrem.service;
 
 import Dcoding.Celebrem.common.exception.NotFoundException;
+import Dcoding.Celebrem.common.util.SecurityUtil;
 import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.domain.member.Profile;
+import Dcoding.Celebrem.domain.member.SortCondition;
 import Dcoding.Celebrem.domain.tag.Tag;
+import Dcoding.Celebrem.dto.profile.FeedRequestDto;
+import Dcoding.Celebrem.dto.profile.FeedResponseDto;
 import Dcoding.Celebrem.dto.profile.UpdateProfileRequestDto;
 import Dcoding.Celebrem.repository.MemberRepository;
 import Dcoding.Celebrem.repository.ProfileRepository;
 import Dcoding.Celebrem.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -74,23 +83,58 @@ public class ProfileService {
         return null;
     }
 
-    /**
-     * 찜 목록 가져오기 v1 : 프로필 화면에서 이름 검색만
-     * 프로필사진, 닉네임, 날짜?, 좋아요 수, 팔로워 수
-     * fromId(좋아요를 누른 사람)으로 조회해 ToId(인플루언서) 목록을 가져온다.
-     */
-    public void findAllByName() {
-        //return likesRepository.findAllByName(likesSearch.getName());
+    public List<FeedResponseDto> getFeed(String tagName, int page, SortCondition sortCondition) {
+        Optional<Member> member = memberRepository.findMemberByEmail(SecurityUtil.getCurrentMemberEmail());
+        Pageable pageable = PageRequest.of(page - 1, 10);
+
+        if (member.isEmpty()) return getFeedForNonMembers(tagName, pageable, sortCondition);
+
+        return getFeedForMembers(member.get(), tagName, pageable, sortCondition);
+
     }
 
-    /**
-     * 인플루언서 목록 가져오기 : 인플루언서 검색 화면에서  태그+조건 검색 -> 동적쿼리
-     * profileService에 구현?
-     */
-    /*
-    public void findAllByName(MainSearch mainSearch) {
-        //return profileRepository.findAllByName(mainSearch);
-    }
-     */
+    public List<FeedResponseDto> getFeedForNonMembers(String tagName, Pageable pageable, SortCondition sortCondition) {
+        if (sortCondition.equals(SortCondition.RANDOM)) {
+            Page<Profile> profiles = profileRepository.findByTagNameFetch(tagName, pageable);
+            List<FeedResponseDto> result = profiles.stream().map(p ->
+                    FeedResponseDto.builder().nickname(p.getMember().getNickname())
+                            .imageUrl(p.getProfileImageUrl())
+                            .likeCount(p.getLikeCount())
+                            .isLike(false)
+                            .tagNames(p.getProfileTags().stream().map(pt -> pt.getTag().getName()).collect(Collectors.toList()))
+                            .build()).collect(Collectors.toList());
+            Collections.shuffle(result);
+            return result;
+        }
+        Page<Profile> profiles = profileRepository.findByTagNameFetchOrderByLikeCount(tagName, pageable);
+        return profiles.stream().map(p ->
+                FeedResponseDto.builder().nickname(p.getMember().getNickname())
+                        .imageUrl(p.getProfileImageUrl())
+                        .likeCount(p.getLikeCount())
+                        .isLike(false)
+                        .build()).collect(Collectors.toList());
 
+    }
+
+    public List<FeedResponseDto> getFeedForMembers(Member member, String tagName, Pageable pageable, SortCondition sortCondition) {
+        if (sortCondition.equals(SortCondition.RANDOM)) {
+            Page<Profile> profiles = profileRepository.findByTagNameFetch(tagName, pageable);
+            List<FeedResponseDto> result = profiles.stream().map(p ->
+                    FeedResponseDto.builder().nickname(p.getMember().getNickname())
+                            .imageUrl(p.getProfileImageUrl())
+                            .likeCount(p.getLikeCount())
+                            .isLike(member.getProfile().getProfileTags().contains(p))
+                            .tagNames(p.getProfileTags().stream().map(pt -> pt.getTag().getName()).collect(Collectors.toList()))
+                            .build()).collect(Collectors.toList());
+            Collections.shuffle(result);
+            return result;
+        }
+        Page<Profile> profiles = profileRepository.findByTagNameFetchOrderByLikeCount(tagName, pageable);
+        return profiles.stream().map(p ->
+                FeedResponseDto.builder().nickname(p.getMember().getNickname())
+                        .imageUrl(p.getProfileImageUrl())
+                        .likeCount(p.getLikeCount())
+                        .isLike(member.getProfile().getProfileTags().contains(p))
+                        .build()).collect(Collectors.toList());
+    }
 }
