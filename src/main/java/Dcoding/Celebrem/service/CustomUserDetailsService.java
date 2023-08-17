@@ -29,12 +29,12 @@ public class CustomUserDetailsService implements UserDetailsService {
                     .orElseThrow(()->new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다."));
         }
         System.out.println("return null");
-            return null;
+        return null;
     }
 
     // DB 에 User 값이 존재한다면 UserDetails 객체로 만들어서 리턴
     private UserDetails createUserDetails(Member member) {
-        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getAuthority().toString());
+        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.authorityToString());
         return new User(
                 String.valueOf(member.getId()),
                 member.getPassword(),

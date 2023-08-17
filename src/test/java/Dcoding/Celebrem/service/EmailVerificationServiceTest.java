@@ -1,7 +1,6 @@
 package Dcoding.Celebrem.service;
 
 import Dcoding.Celebrem.domain.member.Member;
-import Dcoding.Celebrem.domain.verification.EmailVerification;
 import Dcoding.Celebrem.dto.email.SendVerificationCodeRequestDto;
 import Dcoding.Celebrem.repository.EmailVerificationRepository;
 import Dcoding.Celebrem.repository.MemberRepository;
