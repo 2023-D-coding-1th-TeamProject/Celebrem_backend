@@ -3,6 +3,7 @@ package Dcoding.Celebrem.domain.member;
 import Dcoding.Celebrem.domain.base.BaseEntity;
 import Dcoding.Celebrem.domain.tag.ProfileTag;
 import Dcoding.Celebrem.domain.tag.Tag;
+import Dcoding.Celebrem.dto.profile.UpdateProfileResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -70,6 +71,11 @@ public class Profile extends BaseEntity {
         this.profileTags.clear();
     }
 
+    public UpdateProfileResponseDto UpdateProfileResponseDto() {
+        return new UpdateProfileResponseDto(this.profileImageUrl, this.description, this.instagramId, this.profileTags);
+    }
+
+    //--Test 메서드--//
     public Boolean isInstagramIdSame(String instagramId) {
         if(!this.instagramId.equals(instagramId)) {
             logger.info("Instagram IDs are different: Expected {}, Actual {}", this.instagramId, instagramId);

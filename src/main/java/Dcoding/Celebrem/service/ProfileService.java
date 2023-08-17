@@ -4,7 +4,7 @@ import Dcoding.Celebrem.common.exception.NotFoundException;
 import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.domain.member.Profile;
 import Dcoding.Celebrem.domain.tag.Tag;
-import Dcoding.Celebrem.dto.profile.UpdateProfileDto;
+import Dcoding.Celebrem.dto.profile.UpdateProfileRequestDto;
 import Dcoding.Celebrem.repository.MemberRepository;
 import Dcoding.Celebrem.repository.ProfileRepository;
 import Dcoding.Celebrem.repository.TagRepository;
@@ -50,7 +50,7 @@ public class ProfileService {
      *  프로필 업데이트 메소드
      */
     @Transactional
-    public void updateProfile(Long profileId, UpdateProfileDto updateProfileDto){
+    public void updateProfile(Long profileId, UpdateProfileRequestDto updateProfileDto){
         Profile profile = findById(profileId);
         List<Tag> updateTags = new ArrayList<>();
 
