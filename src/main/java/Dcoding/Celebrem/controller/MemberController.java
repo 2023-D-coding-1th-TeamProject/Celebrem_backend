@@ -27,5 +27,9 @@ public class MemberController {
         return ResponseEntity.ok(Member.of(memberService.findMemberById(id)));
     }
 
+    /**
+     * 닉네임 기반 검색
+     */
+    // @GetMapping("/search/nickname")
 
 }

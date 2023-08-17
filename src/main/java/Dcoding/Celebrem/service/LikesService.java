@@ -35,7 +35,7 @@ public class LikesService {
      */
 
     /**
-     * 찜 추가하기
+     * 인플루언서 찜하기
      * Member가 좋아요 클릭 -> Likes 테이블에 memberId와 받은 ProfileId로 저장 & Profile의 LikeCount 증가
      */
     @Transactional

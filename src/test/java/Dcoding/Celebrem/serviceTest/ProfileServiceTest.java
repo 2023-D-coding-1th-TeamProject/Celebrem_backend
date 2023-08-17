@@ -3,7 +3,7 @@ package Dcoding.Celebrem.serviceTest;
 import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.domain.member.Profile;
 import Dcoding.Celebrem.domain.tag.Tag;
-import Dcoding.Celebrem.dto.profile.UpdateProfileDto;
+import Dcoding.Celebrem.dto.profile.UpdateProfileRequestDto;
 import Dcoding.Celebrem.repository.MemberRepository;
 import Dcoding.Celebrem.repository.ProfileRepository;
 import Dcoding.Celebrem.repository.TagRepository;
@@ -51,7 +51,7 @@ public class ProfileServiceTest {
         String updateDescription = "바뀐 소개글";
         String updateInstagramId = "instagram_test";
 
-        UpdateProfileDto updateProfileDto = new UpdateProfileDto(updateProfileUrl, updateDescription, updateInstagramId, updateTagNames);
+        UpdateProfileRequestDto updateProfileDto = new UpdateProfileRequestDto(updateProfileUrl, updateDescription, updateInstagramId, updateTagNames);
 
         //when
         profileService.updateProfile(1L, updateProfileDto);

@@ -3,6 +3,7 @@ package Dcoding.Celebrem.domain.member;
 import Dcoding.Celebrem.domain.base.BaseEntity;
 import Dcoding.Celebrem.domain.tag.ProfileTag;
 import Dcoding.Celebrem.domain.tag.Tag;
+import Dcoding.Celebrem.dto.profile.UpdateProfileResponseDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -61,6 +62,10 @@ public class Profile extends BaseEntity {
     private void addProfileTag(ProfileTag profileTag) {
         profileTags.add(profileTag);
         profileTag.connectProfile(this);
+    }
+
+    public UpdateProfileResponseDto UpdateProfileResponseDto() {
+        return new UpdateProfileResponseDto(this.profileImageUrl, this.description, this.instagramId, this.profileTags);
     }
 
     //--Test 메서드--//
