@@ -4,11 +4,13 @@ import Dcoding.Celebrem.domain.base.BaseEntity;
 import Dcoding.Celebrem.domain.member.Profile;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class ProfileTag extends BaseEntity {
 
     @Id @GeneratedValue
@@ -27,6 +29,7 @@ public class ProfileTag extends BaseEntity {
     public ProfileTag(Profile profile, Tag tag) {
         this.profile = profile;
         this.tag = tag;
+        this.profile.addProfileTag(this);
     }
 
 }

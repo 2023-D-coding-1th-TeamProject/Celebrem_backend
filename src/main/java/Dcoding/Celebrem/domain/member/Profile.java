@@ -3,14 +3,18 @@ package Dcoding.Celebrem.domain.member;
 import Dcoding.Celebrem.domain.base.BaseEntity;
 import Dcoding.Celebrem.domain.tag.ProfileTag;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class Profile extends BaseEntity {
 
     @Id @GeneratedValue
@@ -30,7 +34,7 @@ public class Profile extends BaseEntity {
     @OneToOne(mappedBy = "profile", fetch = FetchType.LAZY)
     private Member member;
 
-    @OneToMany(mappedBy = "profile")
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProfileTag> profileTags = new ArrayList<>();
 
     @Builder
@@ -43,6 +47,14 @@ public class Profile extends BaseEntity {
 
     public void changeProfileImage(String imageUrl) {
         this.profileImageUrl = imageUrl;
+    }
+
+    public void addProfileTag(ProfileTag profileTag) {
+        this.profileTags.add(profileTag);
+    }
+
+    public void clearTags() {
+        this.profileTags.clear();
     }
 
 }
