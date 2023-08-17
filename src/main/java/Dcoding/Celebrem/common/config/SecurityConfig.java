@@ -1,8 +1,8 @@
-package Dcoding.Celebrem.config;
+package Dcoding.Celebrem.common.config;
 
-import Dcoding.Celebrem.jwt.JwtAccessDeniedHandler;
-import Dcoding.Celebrem.jwt.JwtAuthenticationEntryPoint;
-import Dcoding.Celebrem.jwt.TokenProvider;
+import Dcoding.Celebrem.common.jwt.JwtAccessDeniedHandler;
+import Dcoding.Celebrem.common.jwt.JwtAuthenticationEntryPoint;
+import Dcoding.Celebrem.common.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

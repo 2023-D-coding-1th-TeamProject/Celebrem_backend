@@ -1,12 +1,13 @@
 package Dcoding.Celebrem.service;
 
+import Dcoding.Celebrem.common.exception.BadRequestException;
 import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.dto.member.MemberCreateRequestDto;
 import Dcoding.Celebrem.dto.token.LoginDto;
 import Dcoding.Celebrem.dto.token.token.TokenDto;
 import Dcoding.Celebrem.dto.token.token.TokenRequestDto;
-import Dcoding.Celebrem.jwt.RefreshToken;
-import Dcoding.Celebrem.jwt.TokenProvider;
+import Dcoding.Celebrem.common.jwt.RefreshToken;
+import Dcoding.Celebrem.common.jwt.TokenProvider;
 import Dcoding.Celebrem.repository.MemberRepository;
 import Dcoding.Celebrem.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,16 +35,24 @@ public class AuthService {
     @Transactional
     public void memberSignup(MemberCreateRequestDto memberCreateRequestDto) {
         if (memberRepository.existsMemberByEmail(memberCreateRequestDto.getUserName())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다");
+            throw new BadRequestException("이미 가입되어 있는 유저입니다");
         }
         Member member = memberCreateRequestDto.toMember(passwordEncoder);
         memberRepository.save(member);
+    }
+
+    public void verifyNicknameDuplication(String nickname) {
+        if (memberRepository.existsMemberByNickname(nickname)) {
+            throw new BadRequestException("이미 존재하는 닉네임입니다.");
+        }
     }
 
     @Transactional
     public TokenDto memberLogin(LoginDto loginDto) {
         // 1. Login ID/PW 를 기반으로 인증 객체인 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = loginDto.toAuthentication();
+
+        if (authenticationToken.equals(null)) throw new BadRequestException("로그인 정보가 올바르지 않습니다.");
 
         return getToken(authenticationToken);
     }
@@ -92,8 +101,6 @@ public class AuthService {
         // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져옴
         RefreshToken refreshToken = refreshTokenRepository.findByKey(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
-        System.out.println("id : " + authentication.getName());
-        System.out.println("authority : " + authentication.getAuthorities());
 
         // 4. Refresh Token 일치하는지 검사
         if (!refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())) {

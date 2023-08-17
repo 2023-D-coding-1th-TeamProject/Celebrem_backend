@@ -4,7 +4,9 @@ import Dcoding.Celebrem.domain.base.BaseEntity;
 import Dcoding.Celebrem.domain.tag.ProfileTag;
 import Dcoding.Celebrem.domain.tag.Tag;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -14,7 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Entity
+@AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class Profile extends BaseEntity {
 
     @Id @GeneratedValue
@@ -34,7 +38,7 @@ public class Profile extends BaseEntity {
     @OneToOne(mappedBy = "profile", fetch = FetchType.LAZY)
     private Member member;
 
-    @OneToMany(mappedBy = "profile")
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProfileTag> profileTags = new ArrayList<>();
 
     @Builder
@@ -58,12 +62,14 @@ public class Profile extends BaseEntity {
             this.profileTags.clear();
     }
 
-    private void addProfileTag(ProfileTag profileTag) {
-        profileTags.add(profileTag);
-        profileTag.connectProfile(this);
+    public void addProfileTag(ProfileTag profileTag) {
+        this.profileTags.add(profileTag);
     }
 
-    //--Test 메서드--//
+    public void clearTags() {
+        this.profileTags.clear();
+    }
+
     public Boolean isInstagramIdSame(String instagramId) {
         if(!this.instagramId.equals(instagramId)) {
             logger.info("Instagram IDs are different: Expected {}, Actual {}", this.instagramId, instagramId);

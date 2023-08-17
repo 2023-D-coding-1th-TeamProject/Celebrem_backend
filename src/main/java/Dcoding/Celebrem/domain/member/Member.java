@@ -2,8 +2,6 @@ package Dcoding.Celebrem.domain.member;
 
 import Dcoding.Celebrem.domain.base.BaseEntity;
 import Dcoding.Celebrem.domain.likes.Likes;
-import Dcoding.Celebrem.domain.tag.ProfileTag;
-import Dcoding.Celebrem.domain.tag.Tag;
 import Dcoding.Celebrem.dto.member.MemberCreateResponseDto;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -11,12 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static Dcoding.Celebrem.domain.member.Authority.ROLE_INFLUENCER;
@@ -32,15 +26,15 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column
     private String email;
 
     private String phoneNumber;
 
-    @Column(nullable = false)
+    @Column
     private String password;
 
-    @Column(nullable = false)
+    @Column
     private String nickname;
 
     @Enumerated(EnumType.STRING)
@@ -60,7 +54,7 @@ public class Member extends BaseEntity {
         this.password = password;
         this.nickname = nickname;
         this.authority = ROLE_USER;
-        this.profile = profile;
+        this.profile = new Profile();
     }
 
     private static final Logger logger = LoggerFactory.getLogger(Profile.class);

@@ -1,4 +1,4 @@
-package Dcoding.Celebrem.jwt;
+package Dcoding.Celebrem.common.jwt;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

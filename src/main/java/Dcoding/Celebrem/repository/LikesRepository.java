@@ -5,11 +5,10 @@ import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.domain.member.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
-@Repository
 public interface LikesRepository extends JpaRepository<Likes, Long> {
 
     /**
@@ -19,5 +18,9 @@ public interface LikesRepository extends JpaRepository<Likes, Long> {
     List<Likes> findByFromId(Long memberId);
 
     List<Likes> findByMember_Id(Long memberId);
+
+    @Query("SELECT l FROM Like l JOIN FETCH l.profile JOIN FETCH l.member " +
+            "WHERE l.profile = :profile AND l.member = :member")
+    Optional<Likes> findByMemberAndProfile(Profile profile, Member member);
 
 }

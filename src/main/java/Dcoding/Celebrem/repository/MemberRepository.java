@@ -7,12 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-@Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findMemberByEmail(String email);
@@ -21,4 +19,11 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("SELECT m from Member m where m.authority =:authority and m.nickname LIKE CONCAT('%', :nickname, '%')")
     Page<Member> findAllByAuthorityAndNicknameContaining(@Param("authority") Authority authority, @Param("nickname") String nickname, Pageable pageable);
+
+    List<Member> findByAuthorityAndNicknameContaining(Authority authority, String nickname);
+    Boolean existsMemberByNickname(String nickname);
+
+    @Query("SELECT m FROM Member m JOIN FETCH m.profile p " +
+            "WHERE m.email = :email")
+    Optional<Member> findByEmailFetchProfile(@Param("email") String email);
 }

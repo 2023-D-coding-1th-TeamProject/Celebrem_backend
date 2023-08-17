@@ -1,4 +1,4 @@
-package Dcoding.Celebrem.util;
+package Dcoding.Celebrem.common.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -11,13 +11,12 @@ public class SecurityUtil {
 
     // SecurityContext 에 유저 정보가 저장되는 시점
     // Request 가 들어올 때 JwtFilter 의 doFilter 에서 저장
-    public static Long getCurrentMemberId() {
+    public static String getCurrentMemberEmail() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || authentication.getName() == null) {
-            throw  new RuntimeException("Security Context 에 인증 정보가 없습니다.");
+            throw  new RuntimeException("현재 로그인 한 유저에 대한 정보가 없습니다.");
         }
-
-        return Long.parseLong(authentication.getName());
+        return authentication.getName();
     }
 }

@@ -1,5 +1,6 @@
 package Dcoding.Celebrem.service;
 
+import Dcoding.Celebrem.common.exception.NotFoundException;
 import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.domain.member.Profile;
 import Dcoding.Celebrem.domain.tag.Tag;
@@ -54,7 +55,9 @@ public class ProfileService {
         List<Tag> updateTags = new ArrayList<>();
 
         for(String tagName : updateProfileDto.getTagNames()){
-            updateTags.add(tagRepository.findByName(tagName));
+            Tag tag = tagRepository.findByName(tagName).orElseThrow(
+                    () -> new NotFoundException("해당 태그를 찾을 수 없습니다."));
+            updateTags.add(tag);
         }
 
         profile.update(updateProfileDto.getProfileImageUrl(), updateProfileDto.getDescription(), updateProfileDto.getInstagramId(), updateTags);
