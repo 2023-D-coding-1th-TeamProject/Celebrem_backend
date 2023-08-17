@@ -63,7 +63,6 @@ public class Profile extends BaseEntity {
         profileTag.connectProfile(this);
     }
 
-    //--Test 메서드--//
     public Boolean isInstagramIdSame(String instagramId) {
         if(!this.instagramId.equals(instagramId)) {
             logger.info("Instagram IDs are different: Expected {}, Actual {}", this.instagramId, instagramId);

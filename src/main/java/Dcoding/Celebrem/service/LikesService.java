@@ -6,7 +6,6 @@ import Dcoding.Celebrem.domain.member.Profile;
 import Dcoding.Celebrem.repository.LikesRepository;
 import Dcoding.Celebrem.repository.MemberRepository;
 import Dcoding.Celebrem.repository.ProfileRepository;
-import Dcoding.Celebrem.util.SecurityUtil;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

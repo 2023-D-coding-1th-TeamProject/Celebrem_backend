@@ -1,7 +1,7 @@
-package Dcoding.Celebrem.config;
+package Dcoding.Celebrem.common.config;
 
-import Dcoding.Celebrem.jwt.JwtFilter;
-import Dcoding.Celebrem.jwt.TokenProvider;
+import Dcoding.Celebrem.common.jwt.JwtFilter;
+import Dcoding.Celebrem.common.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
