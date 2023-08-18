@@ -1,5 +1,7 @@
 package Dcoding.Celebrem.service;
 
+import Dcoding.Celebrem.common.exception.BadRequestException;
+import Dcoding.Celebrem.common.exception.UnauthorizedException;
 import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.dto.member.MemberCreateRequestDto;
 import Dcoding.Celebrem.dto.token.LoginDto;
@@ -10,6 +12,7 @@ import Dcoding.Celebrem.common.jwt.TokenProvider;
 import Dcoding.Celebrem.repository.MemberRepository;
 import Dcoding.Celebrem.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -34,7 +37,7 @@ public class AuthService {
     @Transactional
     public void memberSignup(MemberCreateRequestDto memberCreateRequestDto) {
         if (memberRepository.existsMemberByEmail(memberCreateRequestDto.getUserName())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다");
+            throw new BadRequestException("이미 가입되어 있는 유저입니다");
         }
         Member member = memberCreateRequestDto.toMember(passwordEncoder);
         memberRepository.save(member);
@@ -42,7 +45,7 @@ public class AuthService {
 
     public void verifyNicknameDuplication(String nickname) {
         if (memberRepository.existsMemberByNickname(nickname)) {
-            throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
+            throw new BadRequestException("이미 사용하고 있는 닉네임입니다.");
         }
     }
 
@@ -82,14 +85,14 @@ public class AuthService {
         String username = user.getUsername();
         refreshTokenRepository.deleteRefreshTokenByKey(username);
 
-        return "logged out";
+        return "로그아웃에 성공하였습니다.";
     }
 
     @Transactional
     public TokenDto reissue(TokenRequestDto tokenRequestDto) {
         // 1. Refresh Token 검증
         if (!tokenProvider.validateToken(tokenRequestDto.getRefreshToken())) {
-            throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
+            throw new UnauthorizedException("Refresh Token 이 유효하지 않습니다.");
         }
 
         // 2. Access Token 에서 Member ID 가져오기
@@ -97,13 +100,13 @@ public class AuthService {
 
         // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져옴
         RefreshToken refreshToken = refreshTokenRepository.findByKey(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
+                .orElseThrow(() -> new BadRequestException("로그아웃 된 사용자입니다."));
         System.out.println("id : " + authentication.getName());
         System.out.println("authority : " + authentication.getAuthorities());
 
         // 4. Refresh Token 일치하는지 검사
         if (!refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())) {
-            throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
+            throw new UnauthorizedException("토큰의 유저 정보가 일치하지 않습니다.");
         }
 
         // 5. 새로운 토큰 생성
