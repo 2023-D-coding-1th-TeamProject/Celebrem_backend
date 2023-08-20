@@ -3,9 +3,7 @@ package Dcoding.Celebrem.service;
 import Dcoding.Celebrem.common.exception.BadRequestException;
 import Dcoding.Celebrem.common.exception.NotFoundException;
 import Dcoding.Celebrem.common.exception.UnauthorizedException;
-import Dcoding.Celebrem.common.util.SecurityUtil;
 import Dcoding.Celebrem.domain.member.Member;
-import Dcoding.Celebrem.domain.member.Profile;
 import Dcoding.Celebrem.domain.tag.ProfileTag;
 import Dcoding.Celebrem.domain.tag.Tag;
 import Dcoding.Celebrem.dto.tag.GetTagsResponseDto;
@@ -32,11 +30,13 @@ public class TagService {
     private final int MAX_TAG_COUNT = 3;
 
     @Transactional
-    public void setUpTags(TagSetupRequestDto tagSetupRequestDto) {
+    public void setUpProfileTags(TagSetupRequestDto tagSetupRequestDto) {
         Member currentMember = memberRepository.findByEmailFetchProfile(getCurrentMemberEmail()).orElseThrow(
                 () -> new UnauthorizedException("로그인이 필요합니다"));
         List<String> tagNames = tagSetupRequestDto.getTagNames();
+
         if (tagNames.size() > MAX_TAG_COUNT) throw new BadRequestException("태그는 3개까지만 설정이 가능합니다.");
+
         currentMember.getProfile().clearTags();
         tagNames.stream().forEach(
                 tagName -> {
