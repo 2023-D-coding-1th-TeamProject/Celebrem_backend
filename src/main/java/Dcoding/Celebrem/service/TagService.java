@@ -38,12 +38,11 @@ public class TagService {
         List<String> tagNames = tagSetupRequestDto.getTagNames();
         if (tagNames.size() > MAX_TAG_COUNT) throw new BadRequestException("태그는 3개까지만 설정이 가능합니다.");
         currentMember.getProfile().clearTags();
-        tagNames.stream().forEach(
-                tagName -> {
-                    Tag tag = tagRepository.findByName(tagName).orElseThrow(() -> new NotFoundException("없는 태그명입니다."));
-                    profileTagRepository.save(new ProfileTag(currentMember.getProfile(), tag));
-                }
-        );
+
+        tagNames.stream()
+                .map(tagName -> tagRepository.findByName(tagName)
+                        .orElseThrow(() -> new NotFoundException("없는 태그명입니다.")))
+                .forEach(tag -> profileTagRepository.save(new ProfileTag(currentMember.getProfile(), tag)));
     }
 
     public GetTagsResponseDto getAllTags() {
