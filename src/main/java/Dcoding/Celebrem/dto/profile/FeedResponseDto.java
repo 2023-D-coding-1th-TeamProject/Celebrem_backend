@@ -1,14 +1,11 @@
 package Dcoding.Celebrem.dto.profile;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
+@Getter
 @NoArgsConstructor
-@Data
 public class FeedResponseDto {
     private String nickname;
     private String imageUrl;

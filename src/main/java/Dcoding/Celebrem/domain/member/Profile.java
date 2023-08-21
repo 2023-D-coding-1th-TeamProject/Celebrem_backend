@@ -2,11 +2,7 @@ package Dcoding.Celebrem.domain.member;
 
 import Dcoding.Celebrem.domain.base.BaseEntity;
 import Dcoding.Celebrem.domain.tag.ProfileTag;
-import Dcoding.Celebrem.domain.tag.Tag;
-import Dcoding.Celebrem.dto.profile.InfluencerProfileResponseDto;
-import Dcoding.Celebrem.dto.profile.RegisterInfluencerRequestDto;
-import Dcoding.Celebrem.dto.profile.UpdateProfileRequestDto;
-import Dcoding.Celebrem.dto.profile.UpdateProfileResponseDto;
+import Dcoding.Celebrem.dto.profile.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,12 +52,8 @@ public class Profile extends BaseEntity {
     private static final Logger logger = LoggerFactory.getLogger(Profile.class);
 
     //--연관관계 메서드--//
-    private void changeProfileImage(String imageUrl) {
-        this.profileImageUrl = imageUrl;
-    }
-    private void clearProfileTags() {
-        if (this.profileTags.size() != 0)
-            this.profileTags.clear();
+    public void changeProfileImage(UpdateProfileImageRequestDto updateProfileImageRequestDto) {
+        this.profileImageUrl = updateProfileImageRequestDto.getImageUrl();
     }
 
     public void addProfileTag(ProfileTag profileTag) {
@@ -103,6 +95,7 @@ public class Profile extends BaseEntity {
                 member.getNickname(),
                 member.getEmail(),
                 this.profileImageUrl,
+                this.instagramId,
                 this.description,
                 this.getProfileTagNames());
     }

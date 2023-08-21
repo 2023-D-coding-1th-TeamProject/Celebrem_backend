@@ -4,7 +4,6 @@ import Dcoding.Celebrem.common.exception.BadRequestException;
 import Dcoding.Celebrem.domain.base.BaseEntity;
 import Dcoding.Celebrem.domain.likes.Likes;
 import Dcoding.Celebrem.dto.member.MemberCreateResponseDto;
-import Dcoding.Celebrem.dto.profile.RegisterInfluencerRequestDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

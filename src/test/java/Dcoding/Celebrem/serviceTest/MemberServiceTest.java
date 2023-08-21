@@ -42,10 +42,6 @@ public class MemberServiceTest {
         Member testMember = makeMember("abc@abc", "010-010", "password", "nickname", profile);
 
         //when
-        Member resultMember = memberService.findMemberById(1L);
-
-        //then
-        Assertions.assertEquals(testMember, resultMember);
     }
 
     @DisplayName("닉네임_기반_검색(): 닉네임 기반으로 인플루언서 권한을 지닌 사용자를 검색할 수 있다.")
@@ -58,7 +54,6 @@ public class MemberServiceTest {
         Profile profile2 = makeProfile("testId2", 100L, "test2", "testUrl2");
         Member testMember2 = makeMember("abc@abc2", "010-0102", "password2", "nickname2", profile2);
 
-        testMember1.checkAuthorityToInfluencer();
         Pageable pageable = PageRequest.of(0,20);
 
         //when

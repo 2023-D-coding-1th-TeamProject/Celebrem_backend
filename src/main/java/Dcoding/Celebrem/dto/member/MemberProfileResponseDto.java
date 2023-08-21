@@ -9,12 +9,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberProfileResponseDto {
 
-    String nickname;
-    String email;
-    String profileImageUrl;
-    String description;
-    String instagramId;
-    List<String> profileTagNames;
+    private String nickname;
+    private String email;
+    private String profileImageUrl;
+    private String description;
+    private String instagramId;
+    private List<String> profileTagNames;
 
     public MemberProfileResponseDto(String nickname, String email, String profileImageUrl, String description, String instagramId, List<String> profileTagNames) {
         this.nickname = nickname;

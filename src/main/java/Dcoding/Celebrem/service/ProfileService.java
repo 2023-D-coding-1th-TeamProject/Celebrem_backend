@@ -6,12 +6,10 @@ import Dcoding.Celebrem.common.util.SecurityUtil;
 import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.domain.member.Profile;
 import Dcoding.Celebrem.domain.member.SortCondition;
-import Dcoding.Celebrem.domain.tag.Tag;
 import Dcoding.Celebrem.dto.profile.*;
 import Dcoding.Celebrem.repository.MemberRepository;
 import Dcoding.Celebrem.repository.ProfileRepository;
 import Dcoding.Celebrem.repository.TagRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -54,6 +51,13 @@ public class ProfileService {
         Profile profile = profileRepository.findById(profileId).orElseThrow(
                 () -> new NotFoundException("프로필(아이디: " + profileId + ")를 찾을 수 없습니다."));
         return profile.getInfluencerProfile();
+    }
+
+    public void updateProfileImage(UpdateProfileImageRequestDto updateProfileImageRequestDto) {
+        Profile profile = memberRepository.findByEmailFetchProfile(SecurityUtil.getCurrentMemberEmail()).orElseThrow(
+                () -> new UnauthorizedException("로그인이 필요합니다")).getProfile();
+
+        profile.changeProfileImage(updateProfileImageRequestDto);
     }
 
     public InfluencerProfileResponseDto getMyProfile() {

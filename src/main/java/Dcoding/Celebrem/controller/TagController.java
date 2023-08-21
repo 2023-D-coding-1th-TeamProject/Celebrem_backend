@@ -5,7 +5,6 @@ import Dcoding.Celebrem.dto.tag.TagSetupRequestDto;
 import Dcoding.Celebrem.service.TagService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +22,7 @@ public class TagController {
     @ApiResponse(responseCode = "401", description = "로그인이 필요합니다.")
     @ApiResponse(responseCode = "404", description = "없는 태그명입니다.")
     @PostMapping("/profile-tag/setup")
-    public ResponseEntity<Void> setUpProfileTags(@RequestHeader("Authorization")String accessToken,
-                                                 @RequestBody TagSetupRequestDto profileTagSetupReqeustDto) {
+    public ResponseEntity<Void> setUpProfileTags(@RequestBody TagSetupRequestDto profileTagSetupReqeustDto) {
         tagService.setUpProfileTags(profileTagSetupReqeustDto);
         return ResponseEntity.noContent().build();
     }

@@ -1,6 +1,5 @@
 package Dcoding.Celebrem.dto.profile;
 
-import Dcoding.Celebrem.domain.tag.Tag;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

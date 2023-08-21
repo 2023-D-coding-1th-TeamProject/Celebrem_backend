@@ -1,12 +1,12 @@
 package Dcoding.Celebrem.dto.profile;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeedRequestDto {
-    private String tagName;
+@Data
+public class UpdateProfileImageRequestDto {
+    private String imageUrl;
 }
