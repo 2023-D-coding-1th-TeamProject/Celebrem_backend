@@ -5,8 +5,8 @@ import Dcoding.Celebrem.dto.member.MemberCreateRequestDto;
 import Dcoding.Celebrem.dto.token.LoginDto;
 import Dcoding.Celebrem.dto.token.token.TokenDto;
 import Dcoding.Celebrem.dto.token.token.TokenRequestDto;
-import Dcoding.Celebrem.jwt.RefreshToken;
-import Dcoding.Celebrem.jwt.TokenProvider;
+import Dcoding.Celebrem.common.jwt.RefreshToken;
+import Dcoding.Celebrem.common.jwt.TokenProvider;
 import Dcoding.Celebrem.repository.MemberRepository;
 import Dcoding.Celebrem.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +38,12 @@ public class AuthService {
         }
         Member member = memberCreateRequestDto.toMember(passwordEncoder);
         memberRepository.save(member);
+    }
+
+    public void verifyNicknameDuplication(String nickname) {
+        if (memberRepository.existsMemberByNickname(nickname)) {
+            throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
+        }
     }
 
     @Transactional

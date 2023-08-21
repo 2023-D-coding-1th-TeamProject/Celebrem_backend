@@ -36,7 +36,7 @@ public class MemberServiceTest {
 
     @DisplayName("findProfile(): id로 프로필을 가져올 수 있다.")
     @Test
-    void findProfileTest() throws Exception {
+    void findMemberByIdTest() throws Exception {
         //given
         Profile profile = makeProfile("testId", 100L, "test", "testUrl");
         Member testMember = makeMember("abc@abc", "010-010", "password", "nickname", profile);

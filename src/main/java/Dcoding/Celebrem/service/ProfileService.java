@@ -1,12 +1,16 @@
 package Dcoding.Celebrem.service;
 
+import Dcoding.Celebrem.common.exception.NotFoundException;
 import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.domain.member.Profile;
 import Dcoding.Celebrem.domain.tag.Tag;
+import Dcoding.Celebrem.dto.profile.RegisterInfluencerRequestDto;
+import Dcoding.Celebrem.dto.profile.RegisterInfluencerResponseDto;
 import Dcoding.Celebrem.dto.profile.UpdateProfileRequestDto;
 import Dcoding.Celebrem.repository.MemberRepository;
 import Dcoding.Celebrem.repository.ProfileRepository;
 import Dcoding.Celebrem.repository.TagRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,33 +32,53 @@ public class ProfileService {
      * 인플루언서 등록하기
      * user_role -> 받은 정보로 등록
      * influencer_role -> 이미 등록된 사용자 -> 등록 불가
+     * Long memberId, String instagramId, Tag... tags
      */
     @Transactional
-    public void registerInfluencer(Long memberId, String instagramId, Tag... tags) {
-        // 엔티티 조회 : member는 빈 profile 객체를 가지고 있는 상태
-        Member member = memberRepository.findById(memberId).get();
+    public RegisterInfluencerResponseDto registerInfluencer(Long memberId, RegisterInfluencerRequestDto requestDto) {
+
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new EntityNotFoundException("회원(아이디:  " + memberId + ")를 찾을 수 없습니다."));
         Profile profile = profileRepository.findByMember_Id(memberId);
 
         // 인플루언서 등록 가능한 아이디인지 검사
         member.checkAuthorityToInfluencer();
 
         // 정보가 입력 된 프로필 객체 생성
-        Profile getProfile = profile.registerInfluencer(instagramId, tags);
+        List<Tag> tags = new ArrayList<>();
+        for (String tagName : requestDto.getTagNames()) {
+            Tag tag = tagRepository.findByName(tagName).orElseThrow(
+                    () -> new NotFoundException("없는 태그명입니다.")
+            );
+            tags.add(tag);
+        }
+
+        Profile getProfile = profile.registerInfluencer(requestDto.getInstagramId(), (Tag) tags);
 
         // 등록
         member.registerInfluencer(getProfile);
+
+        return new RegisterInfluencerResponseDto(
+                member.getNickname(),
+                member.getEmail(),
+                profile.getProfileImageUrl(),
+                profile.getDescription(),
+                profile.getInstagramId(),
+                profile.getProfileTagNames());
     }
 
     /**
-     *  프로필 업데이트 메소드
+     *  프로필 업데이트 메소드(인플루언서)
      */
     @Transactional
     public void updateProfile(Long profileId, UpdateProfileRequestDto updateProfileDto){
-        Profile profile = findById(profileId);
+        Profile profile = findProfileById(profileId);
         List<Tag> updateTags = new ArrayList<>();
 
         for(String tagName : updateProfileDto.getTagNames()){
-            updateTags.add(tagRepository.findByName(tagName));
+            Tag tag = tagRepository.findByName(tagName).orElseThrow(
+                    () -> new NotFoundException("해당 태그를 찾을 수 없습니다."));
+            updateTags.add(tag);
         }
 
         profile.update(updateProfileDto.getProfileImageUrl(), updateProfileDto.getDescription(), updateProfileDto.getInstagramId(), updateTags);
@@ -63,12 +87,11 @@ public class ProfileService {
     /**
      * 프로필 반환 메소드
      */
-    public Profile findById(Long profileId) {
-        Optional<Profile> profile = profileRepository.findById(profileId);
-        if(profile.isPresent()){
-            return profile.get();
-        }
-        return null;
+    public Profile findProfileById(Long profileId) {
+        Profile profile = profileRepository.findById(profileId).orElseThrow(
+                () -> new NotFoundException("프로필(아이디: " + profileId + ")를 찾을 수 없습니다."));
+
+        return profile;
     }
 
     /**

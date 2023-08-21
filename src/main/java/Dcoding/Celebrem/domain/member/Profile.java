@@ -5,7 +5,9 @@ import Dcoding.Celebrem.domain.tag.ProfileTag;
 import Dcoding.Celebrem.domain.tag.Tag;
 import Dcoding.Celebrem.dto.profile.UpdateProfileResponseDto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -15,7 +17,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Entity
+@AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class Profile extends BaseEntity {
 
     @Id @GeneratedValue
@@ -35,7 +39,7 @@ public class Profile extends BaseEntity {
     @OneToOne(mappedBy = "profile", fetch = FetchType.LAZY)
     private Member member;
 
-    @OneToMany(mappedBy = "profile")
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProfileTag> profileTags = new ArrayList<>();
 
     @Builder
@@ -59,13 +63,25 @@ public class Profile extends BaseEntity {
             this.profileTags.clear();
     }
 
-    private void addProfileTag(ProfileTag profileTag) {
-        profileTags.add(profileTag);
-        profileTag.connectProfile(this);
+    public void addProfileTag(ProfileTag profileTag) {
+        this.profileTags.add(profileTag);
     }
+
+    public void clearTags() {
+        this.profileTags.clear();
+    }
+
 
     public UpdateProfileResponseDto UpdateProfileResponseDto() {
         return new UpdateProfileResponseDto(this.profileImageUrl, this.description, this.instagramId, this.profileTags);
+    }
+
+    public List<String> getProfileTagNames() {
+        List<String> tagNames = new ArrayList<>();
+        for (ProfileTag profileTag : this.profileTags) {
+            tagNames.add(profileTag.getTagName());
+        }
+        return tagNames;
     }
 
     //--Test 메서드--//

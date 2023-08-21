@@ -3,6 +3,7 @@ package Dcoding.Celebrem.serviceTest;
 import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.domain.member.Profile;
 import Dcoding.Celebrem.domain.tag.Tag;
+import Dcoding.Celebrem.dto.profile.RegisterInfluencerRequestDto;
 import Dcoding.Celebrem.dto.profile.UpdateProfileRequestDto;
 import Dcoding.Celebrem.repository.MemberRepository;
 import Dcoding.Celebrem.repository.ProfileRepository;
@@ -70,7 +71,7 @@ public class ProfileServiceTest {
         Profile testProfile = makeProfile("testId", 100L, "test", "testUrl");
 
         //when
-        Profile ResultProfile = profileService.findById(1L);
+        Profile ResultProfile = profileService.findProfileById(1L);
 
         //then
         Assertions.assertEquals(testProfile, ResultProfile);
@@ -89,8 +90,14 @@ public class ProfileServiceTest {
         tagRepository.save(tag2);
         tagRepository.save(tag3);
 
+        List<String> tagNames = new ArrayList<>();
+        tagNames.add(tag1.getName());
+        tagNames.add(tag2.getName());
+
+        RegisterInfluencerRequestDto requestDto = new RegisterInfluencerRequestDto("새로운 인스타 아이디", tagNames);
+
         //when
-        profileService.registerInfluencer(1L, "Instagram_test", tag1, tag3);
+        profileService.registerInfluencer(1L, requestDto);
 
         Profile profile = profileRepository.findByMember_Id(1L);
 

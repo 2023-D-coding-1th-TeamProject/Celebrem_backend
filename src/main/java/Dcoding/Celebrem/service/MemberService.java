@@ -1,14 +1,13 @@
 package Dcoding.Celebrem.service;
 
+import Dcoding.Celebrem.common.exception.NotFoundException;
 import Dcoding.Celebrem.domain.member.Authority;
 import Dcoding.Celebrem.domain.member.Member;
-import Dcoding.Celebrem.dto.member.MemberCreateRequestDto;
-import Dcoding.Celebrem.dto.member.MemberCreateResponseDto;
 import Dcoding.Celebrem.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,11 +26,24 @@ public class MemberService {
     }
 
     public Member findMemberById(Long id) {
-        Optional<Member> optionalMember = memberRepository.findById(id);
-        if(optionalMember.isPresent()){
-            return optionalMember.get();
-        }
-        return null;
+        Member member = memberRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("회원(id: " + id + ")를 찾을 수 없습니다.")
+        );
+        return member;
+    }
+
+    public Member findByEmailFetchProfile(String email) {
+        Member member = memberRepository.findByEmailFetchProfile(email).orElseThrow(
+                () -> new NotFoundException("회원(email: " + email + ")를 찾을 수 없습니다.")
+        );
+        return member;
+    }
+
+    public Member findByIdFetchProfile(Long memberId) {
+        Member member = memberRepository.findByIdFetchProfile(memberId).orElseThrow(
+                () -> new NotFoundException("회원(id: " + memberId + ")를 찾을 수 없습니다.")
+        );
+        return member;
     }
 
     /**

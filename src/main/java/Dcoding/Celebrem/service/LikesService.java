@@ -6,7 +6,6 @@ import Dcoding.Celebrem.domain.member.Profile;
 import Dcoding.Celebrem.repository.LikesRepository;
 import Dcoding.Celebrem.repository.MemberRepository;
 import Dcoding.Celebrem.repository.ProfileRepository;
-import Dcoding.Celebrem.util.SecurityUtil;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -77,6 +76,11 @@ public class LikesService {
      * 찜 목록 반환하기
      */
     public List<Likes> findAll(Long memberId){
-        return likesRepository.findByMember_Id(memberId);
+        List<Likes> likesList = likesRepository.findAllByMember_Id(memberId);
+
+        if (likesList.isEmpty()) {
+            throw new EntityNotFoundException("아이디: " + memberId + ", 해당하는 찜 목록이 없습니다.");
+        }
+        return likesList;
     }
 }

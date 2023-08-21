@@ -1,13 +1,11 @@
 package Dcoding.Celebrem.repository;
 
 import Dcoding.Celebrem.domain.tag.ProfileTag;
+import Dcoding.Celebrem.domain.tag.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
-@Repository
 public interface ProfileTagRepository extends JpaRepository<ProfileTag, Long> {
-
-    List<ProfileTag> findAllByProfile_Id(Long profileId);
+    Optional<ProfileTag> findByTag(Tag tag);
 }
