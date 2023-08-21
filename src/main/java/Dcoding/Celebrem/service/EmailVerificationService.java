@@ -66,7 +66,7 @@ public class EmailVerificationService {
 
     public void verify(VerifyRequestDto verifyRequestDto) {
         EmailVerification emailVerification = emailVerificationRepository.findByEmail(verifyRequestDto.getEmail()).orElseThrow(
-                () -> new BadRequestException("잘못된 입력입니다.")); // TODO : customException Refactor
+                () -> new BadRequestException("잘못된 이메일 입력입니다.")); // TODO : customException Refactor
         emailVerification.verify(verifyRequestDto);
         emailVerificationRepository.delete(emailVerification); // TODO : 인증 완료시 DB 인증코드 데이터 삭제 (왜 안됨?)
     }

@@ -1,7 +1,6 @@
 package Dcoding.Celebrem.service;
 
 import Dcoding.Celebrem.domain.member.Member;
-import Dcoding.Celebrem.domain.member.Profile;
 import Dcoding.Celebrem.domain.tag.ProfileTag;
 import Dcoding.Celebrem.domain.tag.Tag;
 import Dcoding.Celebrem.dto.tag.TagSetupRequestDto;
@@ -49,7 +48,7 @@ class TagServiceTest {
         tagRepository.save(tag);
 
         // when
-        tagService.setUpTags(new TagSetupRequestDto(List.of("게임")));
+        tagService.setUpProfileTags(new TagSetupRequestDto(List.of("게임")));
         List<ProfileTag> myProfileTags = member.getProfile().getProfileTags();
         ProfileTag profileTag = profileTagRepository.findByTag(tag).get();
 

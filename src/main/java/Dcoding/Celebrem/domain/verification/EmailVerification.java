@@ -1,6 +1,6 @@
 package Dcoding.Celebrem.domain.verification;
 
-import Dcoding.Celebrem.common.exception.BadRequestException;
+import Dcoding.Celebrem.common.exception.UnauthorizedException;
 import Dcoding.Celebrem.dto.email.VerifyRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,7 +43,7 @@ public class EmailVerification {
 
     public void verify(VerifyRequestDto verifyRequestDto) {
         if (!expiredDate.isAfter(LocalDateTime.now()) || !code.equals(verifyRequestDto.getCode())) {
-            throw new BadRequestException("인증번호가 올바르지 않습니다.");
+            throw new UnauthorizedException("인증번호가 올바르지 않습니다.");
         }
     }
 

@@ -47,7 +47,7 @@ public class ProfileController {
     @PutMapping("/profile/update")
     public ResponseEntity<Void> updateProfile(@RequestBody UpdateProfileRequestDto updateProfileRequestDto) {
         if (updateProfileRequestDto.getTagNames() != null && !updateProfileRequestDto.getTagNames().isEmpty()) {
-            tagService.setUpTags(new TagSetupRequestDto(updateProfileRequestDto.getTagNames()));
+            tagService.setUpProfileTags(new TagSetupRequestDto(updateProfileRequestDto.getTagNames()));
         }
         profileService.updateProfile(updateProfileRequestDto);
         return ResponseEntity.noContent().build();
@@ -62,7 +62,7 @@ public class ProfileController {
     })
     @PostMapping("/register-influencer")
     public ResponseEntity<Void> RegisterInfluencer(@RequestBody @Valid RegisterInfluencerRequestDto requestDto) {
-        tagService.setUpTags(new TagSetupRequestDto(requestDto.getTagNames()));
+        tagService.setUpProfileTags(new TagSetupRequestDto(requestDto.getTagNames()));
         profileService.registerInfluencer(requestDto);
         return ResponseEntity.noContent().build();
     }

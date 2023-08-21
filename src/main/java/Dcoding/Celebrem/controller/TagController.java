@@ -18,16 +18,14 @@ public class TagController {
 
     private final TagService tagService;
 
-    @Operation(summary = "태그 설정", description = "태그는 최대 3개까지 설정 가능하고, 태그 설정시 기존 태그와 교체되는 방식(기존 태그는 사라짐)")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "태그 설정 완료"),
-            @ApiResponse(responseCode = "400", description = "태그는 3개까지만 설정이 가능합니다"),
-            @ApiResponse(responseCode = "401", description = "로그인이 필요합니다"),
-            @ApiResponse(responseCode = "404", description = "없는 태그명입니다")
-    })
+    @Operation(summary = "인플루언서 프로필 태그 등록", description = "복수개의 태그 이름을 받아 프로필 태그 등록")
+    @ApiResponse(responseCode = "400", description = "태그는 3개까지만 설정이 가능합니다.")
+    @ApiResponse(responseCode = "401", description = "로그인이 필요합니다.")
+    @ApiResponse(responseCode = "404", description = "없는 태그명입니다.")
     @PostMapping("/profile-tag/setup")
-    public ResponseEntity<Void> memberSignup(@RequestBody TagSetupRequestDto profileTagSetupReqeustDto) {
-        tagService.setUpTags(profileTagSetupReqeustDto);
+    public ResponseEntity<Void> setUpProfileTags(@RequestHeader("Authorization")String accessToken,
+                                                 @RequestBody TagSetupRequestDto profileTagSetupReqeustDto) {
+        tagService.setUpProfileTags(profileTagSetupReqeustDto);
         return ResponseEntity.noContent().build();
     }
 
