@@ -1,32 +1,21 @@
 package Dcoding.Celebrem.controller;
 
-import Dcoding.Celebrem.common.exception.NotFoundException;
-import Dcoding.Celebrem.common.util.SecurityUtil;
-import Dcoding.Celebrem.domain.likes.Likes;
-import Dcoding.Celebrem.domain.member.Member;
-import Dcoding.Celebrem.domain.member.Profile;
 import Dcoding.Celebrem.domain.member.SortCondition;
-import Dcoding.Celebrem.domain.tag.Tag;
 import Dcoding.Celebrem.dto.profile.*;
-import Dcoding.Celebrem.repository.LikesRepository;
-import Dcoding.Celebrem.repository.MemberRepository;
-import Dcoding.Celebrem.repository.TagRepository;
+import Dcoding.Celebrem.dto.tag.TagSetupRequestDto;
 import Dcoding.Celebrem.service.LikesService;
 import Dcoding.Celebrem.service.MemberService;
 import Dcoding.Celebrem.service.ProfileService;
+import Dcoding.Celebrem.service.TagService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,53 +24,57 @@ public class ProfileController {
 
     private final ProfileService profileService;
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
-    private final TagRepository tagRepository;
-    private final LikesRepository likesRepository;
     private final LikesService likesService;
+    private final TagService tagService;
 
-    @PutMapping("/update")
-    public UpdateProfileResponseDto updateProfile(@AuthenticationPrincipal UserDetails userDetails,
-                                                  @RequestBody @Valid UpdateProfileRequestDto requestDto) {
-
-        String email = SecurityUtil.getCurrentMemberEmail();
-        Member member = memberService.findByEmailFetchProfile(email);
-        Long profileId = member.getProfile().getId();
-
-        profileService.updateProfile(profileId, requestDto);
-        Profile findProfile = profileService.findProfileById(profileId);
-
-        return findProfile.UpdateProfileResponseDto();
+    @Operation(summary = "프로필 정보 수정을 위한 기존 프로필 정보 반환", description = "인플루언서가 아니라면 인플루언서 프로필 정보들은 null로 반환됨")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "프로필 정보 불러오기 성공"),
+            @ApiResponse(responseCode = "401", description = "로그인이 필요합니다"),
+    })
+    @GetMapping("/profile/update")
+    public ResponseEntity<InfluencerProfileResponseDto> getProfileForUpdate(@RequestBody UpdateProfileRequestDto updateProfileRequestDto) {
+        return ResponseEntity.ok(profileService.getMyProfile());
     }
 
-    @PutMapping("/register/{id}")
-    public RegisterInfluencerResponseDto RegisterInfluencer(@RequestBody @Valid RegisterInfluencerRequestDto requestDto) {
-
-        String email = SecurityUtil.getCurrentMemberEmail();
-        Member member = memberService.findByEmailFetchProfile(email);
-
-        List<Tag> tags = new ArrayList<>();
-        for (String tagName : requestDto.getTagNames()) {
-            Tag tag = tagRepository.findByName(tagName).orElseThrow(
-                    () -> new NotFoundException("없는 태그명입니다.")
-            );
-            tags.add(tag);
+    @Operation(summary = "프로필 정보 수정", description = "tag 정보가 포함되어 있다면 인플루언서 프로필 수정, tag 정보가 없다면 광고주 프로필 수정")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "프로필 정보 수정 성공"),
+            @ApiResponse(responseCode = "400", description = "태그는 3개까지만 설정이 가능합니다"),
+            @ApiResponse(responseCode = "401", description = "로그인이 필요합니다"),
+            @ApiResponse(responseCode = "404", description = "없는 태그명입니다")
+    })
+    @PutMapping("/profile/update")
+    public ResponseEntity<Void> updateProfile(@RequestBody UpdateProfileRequestDto updateProfileRequestDto) {
+        if (updateProfileRequestDto.getTagNames() != null && !updateProfileRequestDto.getTagNames().isEmpty()) {
+            tagService.setUpTags(new TagSetupRequestDto(updateProfileRequestDto.getTagNames()));
         }
-
-        return profileService.registerInfluencer(member.getId(), requestDto);
+        profileService.updateProfile(updateProfileRequestDto);
+        return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "인플루언서 등록")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "인플루언서 등록 성공"),
+            @ApiResponse(responseCode = "400", description = "태그는 3개까지만 설정이 가능합니다"),
+            @ApiResponse(responseCode = "401", description = "로그인이 필요합니다"),
+            @ApiResponse(responseCode = "404", description = "없는 태그명입니다")
+    })
+    @PostMapping("/register-influencer")
+    public ResponseEntity<Void> RegisterInfluencer(@RequestBody @Valid RegisterInfluencerRequestDto requestDto) {
+        tagService.setUpTags(new TagSetupRequestDto(requestDto.getTagNames()));
+        profileService.registerInfluencer(requestDto);
+        return ResponseEntity.noContent().build();
+    }
 
-    @GetMapping("/influencerProfile")
-    public InfluencerProfileResponseDto influencerProfile(@RequestBody @Valid InfluencerProfileRequestDto requestDto) {
-        Member member = memberService.findByIdFetchProfile(requestDto.getMemberId());
-        Profile profile = member.getProfile();
-        return new InfluencerProfileResponseDto(
-                member.getNickname(),
-                member.getEmail(),
-                profile.getProfileImageUrl(),
-                profile.getDescription(),
-                profile.getProfileTagNames());
+    @Operation(summary = "인플루언서 프로필 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "인플루언서 프로필 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "잘못된 입력입니다")
+    })
+    @GetMapping("/profile/{profile_id}")
+    public ResponseEntity<InfluencerProfileResponseDto> getInfluencerProfile(@PathVariable("profile_id") Long profileId) {
+        return ResponseEntity.ok(profileService.getInfluencerProfile(profileId));
     }
 
     @Operation(summary = "메인 페이지 피드")

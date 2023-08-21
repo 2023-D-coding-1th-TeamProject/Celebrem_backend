@@ -1,16 +1,13 @@
 package Dcoding.Celebrem.service;
 
 import Dcoding.Celebrem.common.exception.NotFoundException;
+import Dcoding.Celebrem.common.exception.UnauthorizedException;
 import Dcoding.Celebrem.common.util.SecurityUtil;
 import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.domain.member.Profile;
 import Dcoding.Celebrem.domain.member.SortCondition;
 import Dcoding.Celebrem.domain.tag.Tag;
-import Dcoding.Celebrem.dto.profile.RegisterInfluencerRequestDto;
-import Dcoding.Celebrem.dto.profile.RegisterInfluencerResponseDto;
-import Dcoding.Celebrem.dto.profile.FeedRequestDto;
-import Dcoding.Celebrem.dto.profile.FeedResponseDto;
-import Dcoding.Celebrem.dto.profile.UpdateProfileRequestDto;
+import Dcoding.Celebrem.dto.profile.*;
 import Dcoding.Celebrem.repository.MemberRepository;
 import Dcoding.Celebrem.repository.ProfileRepository;
 import Dcoding.Celebrem.repository.TagRepository;
@@ -38,54 +35,31 @@ public class ProfileService {
     private final TagRepository tagRepository;
 
     @Transactional
-    public RegisterInfluencerResponseDto registerInfluencer(Long memberId, RegisterInfluencerRequestDto requestDto) {
+    public void registerInfluencer(RegisterInfluencerRequestDto requestDto) {
+        Profile profile = memberRepository.findByEmailFetchProfile(SecurityUtil.getCurrentMemberEmail()).orElseThrow(
+                () -> new UnauthorizedException("로그인이 필요합니다")).getProfile();
 
-        Member member = memberRepository.findById(memberId).orElseThrow(
-                () -> new EntityNotFoundException("회원(아이디:  " + memberId + ")를 찾을 수 없습니다."));
-        Profile profile = profileRepository.findByMember_Id(memberId);
-
-        member.checkAuthorityToInfluencer();
-
-        List<Tag> tags = new ArrayList<>();
-        for (String tagName : requestDto.getTagNames()) {
-            Tag tag = tagRepository.findByName(tagName).orElseThrow(
-                    () -> new NotFoundException("없는 태그명입니다.")
-            );
-            tags.add(tag);
-        }
-
-        Profile getProfile = profile.registerInfluencer(requestDto.getInstagramId(), (Tag) tags);
-
-        member.registerInfluencer(getProfile);
-
-        return new RegisterInfluencerResponseDto(
-                member.getNickname(),
-                member.getEmail(),
-                profile.getProfileImageUrl(),
-                profile.getDescription(),
-                profile.getInstagramId(),
-                profile.getProfileTagNames());
+        profile.registerInfluencer(requestDto);
     }
 
     @Transactional
-    public void updateProfile(Long profileId, UpdateProfileRequestDto updateProfileDto){
-        Profile profile = findProfileById(profileId);
-        List<Tag> updateTags = new ArrayList<>();
+    public void updateProfile(UpdateProfileRequestDto updateProfileDto){
+        Profile profile = memberRepository.findByEmailFetchProfile(SecurityUtil.getCurrentMemberEmail()).orElseThrow(
+                () -> new UnauthorizedException("로그인이 필요합니다")).getProfile();
 
-        for(String tagName : updateProfileDto.getTagNames()){
-            Tag tag = tagRepository.findByName(tagName).orElseThrow(
-                    () -> new NotFoundException("해당 태그를 찾을 수 없습니다."));
-            updateTags.add(tag);
-        }
-
-        profile.update(updateProfileDto.getProfileImageUrl(), updateProfileDto.getDescription(), updateProfileDto.getInstagramId(), updateTags);
+        profile.update(updateProfileDto);
     }
 
-    public Profile findProfileById(Long profileId) {
+    public InfluencerProfileResponseDto getInfluencerProfile(Long profileId) {
         Profile profile = profileRepository.findById(profileId).orElseThrow(
                 () -> new NotFoundException("프로필(아이디: " + profileId + ")를 찾을 수 없습니다."));
+        return profile.getInfluencerProfile();
+    }
 
-        return profile;
+    public InfluencerProfileResponseDto getMyProfile() {
+        Profile profile = memberRepository.findByEmailFetchProfile(SecurityUtil.getCurrentMemberEmail()).orElseThrow(
+                () -> new UnauthorizedException("로그인이 필요합니다")).getProfile();
+        return profile.getInfluencerProfile();
     }
 
     public List<FeedResponseDto> getFeed(String tagName, int page, SortCondition sortCondition) {

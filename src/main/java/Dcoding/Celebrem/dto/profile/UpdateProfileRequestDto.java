@@ -8,7 +8,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class UpdateProfileRequestDto {
-    String profileImageUrl;
     String description;
     String instagramId;
     List<String> tagNames;

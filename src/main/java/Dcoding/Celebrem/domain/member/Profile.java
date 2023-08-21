@@ -3,6 +3,9 @@ package Dcoding.Celebrem.domain.member;
 import Dcoding.Celebrem.domain.base.BaseEntity;
 import Dcoding.Celebrem.domain.tag.ProfileTag;
 import Dcoding.Celebrem.domain.tag.Tag;
+import Dcoding.Celebrem.dto.profile.InfluencerProfileResponseDto;
+import Dcoding.Celebrem.dto.profile.RegisterInfluencerRequestDto;
+import Dcoding.Celebrem.dto.profile.UpdateProfileRequestDto;
 import Dcoding.Celebrem.dto.profile.UpdateProfileResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -56,8 +59,6 @@ public class Profile extends BaseEntity {
     private void changeProfileImage(String imageUrl) {
         this.profileImageUrl = imageUrl;
     }
-    private void changeProfileDescription(String description) { this.description = description; }
-    private void changeInstagramId(String instagramId) {this.instagramId = instagramId;}
     private void clearProfileTags() {
         if (this.profileTags.size() != 0)
             this.profileTags.clear();
@@ -71,10 +72,6 @@ public class Profile extends BaseEntity {
         this.profileTags.clear();
     }
 
-    public UpdateProfileResponseDto UpdateProfileResponseDto() {
-        return new UpdateProfileResponseDto(this.profileImageUrl, this.description, this.instagramId, this.profileTags);
-    }
-
     public List<String> getProfileTagNames() {
         List<String> tagNames = new ArrayList<>();
         for (ProfileTag profileTag : this.profileTags) {
@@ -83,77 +80,30 @@ public class Profile extends BaseEntity {
         return tagNames;
     }
 
-    public Boolean isInstagramIdSame(String instagramId) {
-        if(!this.instagramId.equals(instagramId)) {
-            logger.info("Instagram IDs are different: Expected {}, Actual {}", this.instagramId, instagramId);
-            return false;
-        }
-        return true;
-    }
-
-    public Boolean isProfileTagsSame(int profileTagsSize) {
-        if(this.profileTags.size() != profileTagsSize) {
-            logger.info("Tag Size is different: Expected {}, Actual {}", this.profileTags.size(), profileTagsSize);
-            return false;
-        }
-        return true;
-    }
-
-    public Boolean isProfileImageUrlSame(String profileImageUrl) {
-        if(!this.profileImageUrl.equals(profileImageUrl)) {
-            logger.info("ProfileImageUrl is different: Expected {}, Actual {}", this.profileImageUrl, profileImageUrl);
-            return false;
-        }
-        return true;
-    }
-
-    public Boolean isDescriptionSame(String description) {
-        if(!this.description.equals(description)) {
-            logger.info("Description is different: Expected {}, Actual {}", this.description, description);
-            return false;
-        }
-        return true;
-    }
-
-    //--비즈니스 로직--//
-    /**
-     * 찜 추가
-     */
     public Long increaseLikesCount() {
         return ++likeCount;
     }
 
-    /**
-     * 찜 취소
-     */
     public Long decreaseLikesCount() {
         return --likeCount;
     }
 
-    /**
-     * 인플루언서 등록
-     */
-    public Profile registerInfluencer(String instagramId, Tag... tags) {
-        this.instagramId = instagramId;
-        for (Tag tag : tags) {
-            ProfileTag profileTag = new ProfileTag(this, tag);
-            this.addProfileTag(profileTag);
-        }
-        return this;
+    public void registerInfluencer(RegisterInfluencerRequestDto requestDto) {
+        this.instagramId = requestDto.getInstagramId();
+        this.member.changeRole();
     }
 
-    /**
-     * 프로필 수정(update)
-     */
-    public void update(String profileImageUrl, String description, String instagramId, List<Tag> tags) {
-        this.changeProfileImage(profileImageUrl);
-        this.changeProfileDescription(description);
-        this.changeInstagramId(instagramId);
-        this.clearProfileTags();
+    public void update(UpdateProfileRequestDto updateProfileDto) {
+        this.description = updateProfileDto.getDescription();
+        this.instagramId = updateProfileDto.getInstagramId();
+    }
 
-        for (Tag tag : tags) {
-            ProfileTag profileTag = new ProfileTag(this, tag);
-            this.addProfileTag(profileTag);
-        }
+    public InfluencerProfileResponseDto getInfluencerProfile() {
+        return new InfluencerProfileResponseDto(
+                member.getNickname(),
+                member.getEmail(),
+                this.profileImageUrl,
+                this.description,
+                this.getProfileTagNames());
     }
 }
