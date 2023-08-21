@@ -25,4 +25,6 @@ public interface LikesRepository extends JpaRepository<Likes, Long> {
             "WHERE l.profile = :profile AND l.member = :member")
     Optional<Likes> findByMemberAndProfile(@Param("profile") Profile profile, @Param("member")Member member);
 
+    @Query("select l FROM Likes l JOIN FETCH l.profile p " + "WHERE l.member.id = :id")
+    List<Likes> findAllByIdFetchProfile(@Param("id") Long memberId);
 }

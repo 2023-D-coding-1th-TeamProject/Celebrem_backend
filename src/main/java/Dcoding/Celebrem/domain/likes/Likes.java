@@ -20,7 +20,7 @@ public class Likes {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_id")
+    @JoinColumn(name = "to_id")
     private Profile profile;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -96,13 +96,4 @@ public class ProfileController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "찜 목록")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "찜 목록 불러오기 성공")
-    })
-    @GetMapping("/likes")
-    public ResponseEntity<List<LikesResponseDto>> getLikesProfile() {
-        return ResponseEntity.ok(likesService.getAllLikesProfile());
-    }
-
 }
