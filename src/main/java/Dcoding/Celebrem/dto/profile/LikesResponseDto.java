@@ -7,13 +7,13 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class LikesListResponseDto {
+public class LikesResponseDto {
 
     String nickname;
     String profileImageUrl;
     Long likesCount;
 
-    public LikesListResponseDto(Member member, Profile profile) {
+    public LikesResponseDto(Member member, Profile profile) {
         nickname = member.getNickname();
         profileImageUrl = profile.getProfileImageUrl();
         likesCount = getLikesCount();

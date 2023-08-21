@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/member")
+@RequestMapping("")
 @RequiredArgsConstructor
 public class MemberController {
 
@@ -25,7 +25,7 @@ public class MemberController {
 
     @GetMapping("/me")
     public ResponseEntity<MemberCreateResponseDto> findCurrentMember(){
-        return ResponseEntity.ok(Member.of(memberService.findMemberById(SecurityUtil.getCurrentMemberId())));
+        return ResponseEntity.ok(Member.of(memberService.findByEmailFetchProfile(SecurityUtil.getCurrentMemberEmail())));
     }
 
     @GetMapping("/{id}")
@@ -52,14 +52,4 @@ public class MemberController {
                 profile.getProfileTagNames());
     }
 
-    /**
-     * 닉네임 기반 검색
-     */
-    // @GetMapping("/search/nickname")
-
-    @Data
-    @AllArgsConstructor
-    static class Result<T> {
-        private T data;
-    }
 }

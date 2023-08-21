@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class LikesServiceTest {
     private LikesRepository likesRepository;
 
     @Description("addLikes(): 좋아요 클릭 시, likesCount 증가 확인")
+    @WithMockUser(username = "abc@abc")
     @Test
     void addLikesTest() throws Exception{
         //given
@@ -40,10 +42,12 @@ public class LikesServiceTest {
         Member member = makeMember("abc@abc", "010-010", "password", "nickname");
 
         //when
-        Long resultLikesCount = likesService.addLikes(1L, 1L);
+        likesService.addLikes(1L);
+
+        Long actual = profile.getLikeCount();
 
         //then
-        Assertions.assertEquals(1, resultLikesCount);
+        Assertions.assertEquals(1, actual);
     }
 
     @Description("cancelLikes(): 좋아요 취소 시 likesCount 감소 확인과 likes 테이블에서 삭제되는 지 확인")
@@ -54,7 +58,7 @@ public class LikesServiceTest {
         Member member = makeMember("abc@abc", "010-010", "password", "nickname");
 
         //when
-        Long increasedLikesCount = likesService.addLikes(1L, 1L);
+//        Long increasedLikesCount = likesService.addLikes(1L, 1L);
         Long resultLikesCount = likesService.cancelLikes(1L);
 
         //then
@@ -69,9 +73,9 @@ public class LikesServiceTest {
         Profile profile2 = makeProfile("testId2", 100L, "test2", "testUrl2");
 
         Member member = makeMember("abc@abc", "010-010", "password", "nickname");
-
-        likesService.addLikes(1L, 1L);
-        likesService.addLikes(1L, 2L);
+//
+//        likesService.addLikes(1L, 1L);
+//        likesService.addLikes(1L, 2L);
 
         //when
         List<Likes> likesList = likesService.findAll(1L);

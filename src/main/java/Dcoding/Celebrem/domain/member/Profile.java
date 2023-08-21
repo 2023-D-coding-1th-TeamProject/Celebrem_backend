@@ -71,7 +71,6 @@ public class Profile extends BaseEntity {
         this.profileTags.clear();
     }
 
-
     public UpdateProfileResponseDto UpdateProfileResponseDto() {
         return new UpdateProfileResponseDto(this.profileImageUrl, this.description, this.instagramId, this.profileTags);
     }
@@ -84,7 +83,6 @@ public class Profile extends BaseEntity {
         return tagNames;
     }
 
-    //--Test 메서드--//
     public Boolean isInstagramIdSame(String instagramId) {
         if(!this.instagramId.equals(instagramId)) {
             logger.info("Instagram IDs are different: Expected {}, Actual {}", this.instagramId, instagramId);

@@ -2,12 +2,13 @@ spring:
   datasource:
     url: jdbc:h2:tcp://localhost/~/dcoding
     username: sa
-    password: 1234
+    password:
     driver-class-name: org.h2.Driver
 
   jpa:
     hibernate:
       ddl-auto: create
+      default_batch_fetch_size: 100
     properties:
       hibernate:
         #     show_sql: true
@@ -18,4 +19,4 @@ logging.level:
   org.hibernate.tuype: trace
 
 jwt:
-  secret: dcodingdcodingdcodingdcodingdcodingdcodingdcodingdcoding
+  secret: dcodingdcodingdcodingdcodingdcodingdcodingdcodingdcodingdcodingdcodingdcodingdcodingdcodingdcodingdcodingdcoding
