@@ -4,12 +4,14 @@ import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.domain.member.Profile;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 @Entity
 @Table(name = "likes")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Likes {
 
     @Id @GeneratedValue
@@ -17,7 +19,7 @@ public class Likes {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_id")
+    @JoinColumn(name = "to_id")
     private Profile profile;
 
     @ManyToOne(fetch = FetchType.LAZY)

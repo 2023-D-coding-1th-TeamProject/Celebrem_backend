@@ -16,11 +16,8 @@ public interface LikesRepository extends JpaRepository<Likes, Long> {
     /**
      * 내가 좋아요를 누른 인플루언서 목록 가져오기
      */
-    @Query("select l from Likes l where l.member =:member")
-    List<Likes> findByFromId(Member member);
-
     List<Likes> findAllByMember_Id(Long memberId);
 
-    @Query("select l FROM Likes l JOIN FETCH l.profile p " + "WHERE l.member = :member")
-    List<Likes> findAllByIdFetchProfile(@Param("member") Member member);
+    @Query("select l FROM Likes l JOIN FETCH l.profile p " + "WHERE l.member.id = :id")
+    List<Likes> findAllByIdFetchProfile(@Param("id") Long memberId);
 }

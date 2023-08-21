@@ -102,9 +102,9 @@ public class ProfileController {
         Member member = memberService.findByEmailFetchProfile(email);
 
         // 현재 회원이 좋아요 표시한
-        List<Likes> likesList = likesRepository.findAllByMember_Id(member.getId());
+        List<Likes> likesList = likesRepository.findAllByIdFetchProfile(member.getId());
         List<LikesListResponseDto> collect =likesList.stream()
-                .map(l -> new LikesListResponseDto())
+                .map(l -> new LikesListResponseDto(l.getMember(), l.getProfile()))
                 .collect(Collectors.toList());
 
         return new Result<>(collect);
