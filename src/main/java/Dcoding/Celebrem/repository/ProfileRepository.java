@@ -7,15 +7,20 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
     Profile findByMember_Id(Long memberId);
 
-    @Query("SELECT p FROM Profile p JOIN FETCH p.member pm LEFT JOIN FETCH p.profileTags pt " +
+    @Query("SELECT p FROM Profile p JOIN FETCH p.member pm LEFT JOIN p.profileTags pt " +
             "WHERE :tagName = pt.tag.name")
     Page<Profile> findByTagNameFetch(@Param("tagName") String tagName, Pageable pageable);
 
-    @Query("SELECT p FROM Profile p JOIN FETCH p.member pm JOIN FETCH p.profileTags pt " +
-            "WHERE :tagName = pt.tag.name " +
+    @Query("SELECT p FROM Profile p JOIN FETCH p.member pm LEFT JOIN p.profileTags pt " +
+            "WHERE (:tagName IS NULL OR pt.tag.name = :tagName) " +
             "ORDER BY p.likeCount DESC")
     Page<Profile> findByTagNameFetchOrderByLikeCount(@Param("tagName") String tagName, Pageable pageable);
+
+    @Query("SELECT p FROM Profile p JOIN FETCH p.member pm LEFT JOIN FETCH p.profileTags pt WHERE pm.nickname LIKE %:nickname%")
+    List<Profile> findAllByNickname(@Param("nickname") String nickname);
 }

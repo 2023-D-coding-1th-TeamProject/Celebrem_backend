@@ -32,10 +32,17 @@ public class ProfileController {
         return ResponseEntity.ok(profileService.getInfluencerProfile(profileId));
     }
 
+    @Operation(summary = "닉네임 기반 프로필 검색")
+    @ApiResponse(responseCode = "200", description = "프로필 불러오기 성공")
+    @GetMapping("/feed/{nickname}")
+    public ResponseEntity<List<FeedResponseDto>> getProfilesByNickname(@RequestParam("nickname") String nickname) {
+        return ResponseEntity.ok(profileService.getProfilesByNickname(nickname));
+    }
+
     @Operation(summary = "메인 페이지 피드")
     @ApiResponse(responseCode = "200", description = "피드 불러오기 성공")
     @GetMapping("/feed")
-    public ResponseEntity<List<FeedResponseDto>> getFeed(@RequestParam("page") int page, @RequestParam("tagName")String tagName, @RequestParam("orderBy")SortCondition sortCondition) {
+    public ResponseEntity<List<FeedResponseDto>> getFeed(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam("tagName")String tagName, @RequestParam("orderBy")SortCondition sortCondition) {
         return ResponseEntity.ok(profileService.getFeed(tagName, page, sortCondition));
     }
 

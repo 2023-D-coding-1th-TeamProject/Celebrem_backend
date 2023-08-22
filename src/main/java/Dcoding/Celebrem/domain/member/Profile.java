@@ -97,7 +97,6 @@ public class Profile extends BaseEntity {
                 this.profileImageUrl,
                 this.instagramId,
                 this.description,
-                member.getAuthority(),
                 this.getProfileTagNames());
     }
 }
