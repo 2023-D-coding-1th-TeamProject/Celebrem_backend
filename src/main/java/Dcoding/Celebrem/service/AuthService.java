@@ -12,7 +12,6 @@ import Dcoding.Celebrem.common.jwt.TokenProvider;
 import Dcoding.Celebrem.repository.MemberRepository;
 import Dcoding.Celebrem.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -53,6 +52,8 @@ public class AuthService {
     public TokenDto memberLogin(LoginDto loginDto) {
         // 1. Login ID/PW 를 기반으로 인증 객체인 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = loginDto.toAuthentication();
+
+        if (authenticationToken.equals(null)) throw new BadRequestException("로그인 정보가 올바르지 않습니다.");
 
         return getToken(authenticationToken);
     }
@@ -101,8 +102,6 @@ public class AuthService {
         // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져옴
         RefreshToken refreshToken = refreshTokenRepository.findByKey(authentication.getName())
                 .orElseThrow(() -> new BadRequestException("로그아웃 된 사용자입니다."));
-        System.out.println("id : " + authentication.getName());
-        System.out.println("authority : " + authentication.getAuthorities());
 
         // 4. Refresh Token 일치하는지 검사
         if (!refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())) {

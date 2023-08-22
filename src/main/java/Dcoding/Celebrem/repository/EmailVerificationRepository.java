@@ -9,5 +9,4 @@ public interface EmailVerificationRepository extends JpaRepository<EmailVerifica
     Optional<EmailVerification> findByEmail(String email);
     boolean existsByEmail(String email);
 
-
 }

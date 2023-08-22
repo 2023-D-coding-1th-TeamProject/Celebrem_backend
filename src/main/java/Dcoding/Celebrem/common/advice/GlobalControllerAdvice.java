@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
-public class GlobalControllAdvice {
+public class GlobalControllerAdvice {
 
 
     @ExceptionHandler({BadRequestException.class})
     public ResponseEntity<ErrorResponse> handleBadRequest(final Exception e) {
-        log.debug("HandleBadRequest : {}", e.getMessage());
+        log.debug("BadRequest : {}", e.getMessage());
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 

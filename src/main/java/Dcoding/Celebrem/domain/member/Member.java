@@ -1,5 +1,6 @@
 package Dcoding.Celebrem.domain.member;
 
+import Dcoding.Celebrem.common.exception.BadRequestException;
 import Dcoding.Celebrem.domain.base.BaseEntity;
 import Dcoding.Celebrem.domain.likes.Likes;
 import Dcoding.Celebrem.dto.member.MemberCreateResponseDto;
@@ -67,18 +68,9 @@ public class Member extends BaseEntity {
         return this.authority.toString();
     }
 
-    //--연관관계 메소드--//
-    public void checkAuthorityToInfluencer() {
-        if (this.authority != ROLE_USER)
-            logger.info("already Influencer!!");
+    public void changeRole() {
+        if (this.authority.equals(ROLE_INFLUENCER)) throw new BadRequestException("이미 인플루언서가 등록된 유저입니다");
         this.authority = ROLE_INFLUENCER;
     }
 
-    //--비즈니스 로직--//
-    /**
-     * 인플루언서 등록 V2
-     */
-    public void registerInfluencer(Profile profile) {
-        this.profile = profile; // 이렇게 하면 안되고, 값만 바꿔줘야 하나?
-    }
 }

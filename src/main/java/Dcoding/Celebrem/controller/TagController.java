@@ -1,19 +1,18 @@
 package Dcoding.Celebrem.controller;
 
+import Dcoding.Celebrem.dto.tag.GetTagsResponseDto;
 import Dcoding.Celebrem.dto.tag.TagSetupRequestDto;
 import Dcoding.Celebrem.service.TagService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-
+@Tag(name = "태그 API")
 public class TagController {
 
     private final TagService tagService;
@@ -23,10 +22,16 @@ public class TagController {
     @ApiResponse(responseCode = "401", description = "로그인이 필요합니다.")
     @ApiResponse(responseCode = "404", description = "없는 태그명입니다.")
     @PostMapping("/profile-tag/setup")
-    public ResponseEntity<Void> setUpProfileTags(@RequestHeader("Authorization")String accessToken,
-                                                 @RequestBody TagSetupRequestDto profileTagSetupReqeustDto) {
+    public ResponseEntity<Void> setUpProfileTags(@RequestBody TagSetupRequestDto profileTagSetupReqeustDto) {
         tagService.setUpProfileTags(profileTagSetupReqeustDto);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "태그 불러오기", description = "태그 설정을 위한 태그 정보 불러오기")
+    @ApiResponse(responseCode = "200", description = "태그 불러오기 완료")
+    @GetMapping("/tags")
+    public ResponseEntity<GetTagsResponseDto> getAllTags() {
+        return ResponseEntity.ok(tagService.getAllTags());
     }
 
 }

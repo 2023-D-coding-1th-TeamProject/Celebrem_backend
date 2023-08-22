@@ -2,14 +2,17 @@ package Dcoding.Celebrem.domain.likes;
 
 import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.domain.member.Profile;
+import Dcoding.Celebrem.dto.profile.LikesResponseDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
 @Entity
 @Table(name = "likes")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Likes {
 
     @Id @GeneratedValue
@@ -17,35 +20,21 @@ public class Likes {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_id")
+    @JoinColumn(name = "to_id")
     private Profile profile;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "from_id")
     private Member member;
 
-    //--연관관계 메서드--//
-
-    //--비즈니스 로직--//
-    /**
-     * 찜 추가
-     */
-    public static Likes createLikes(Profile profile, Member member) {
-        Likes likes = new Likes();
-        likes.profile = profile;
-        likes.member = member;
-
-        //Long likesCount = likes.increaseLikesCount();
-
-        return likes;
+    @Builder
+    public Likes(Profile profile, Member member) {
+        this.profile = profile;
+        this.member = member;
+        this.profile.increaseLikesCount();
     }
-    public Long increaseLikesCount(){
-        return this.profile.increaseLikesCount();
-    }
-    /**
-     * 찜 취소
-     */
-    public Long cancelLikes() {
-        return this.profile.decreaseLikesCount();
+
+    public LikesResponseDto getInfluencerInfo() {
+        return new LikesResponseDto(member, profile);
     }
 }

@@ -36,6 +36,7 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
+
     @Operation(summary = "회원 가입 닉네임 중복 검증", description = "닉네임 중복 시에 에러 리턴")
     @ApiResponse(responseCode = "400", description = "이미 사용하고 있는 닉네임입니다.")
     @PostMapping("/signup/nickname-verification")
@@ -43,6 +44,7 @@ public class AuthController {
         authService.verifyNicknameDuplication(memberCreateRequestDto.getNickname());
         return ResponseEntity.noContent().build();
     }
+
 
     @Operation(summary = "사용자 로그인", description = "사용자 로그인 성공시 토큰 발급.")
     @ApiResponse(responseCode = "401", description = "이메일 혹은 비밀번호가 틀렸습니다.")
@@ -67,6 +69,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.logout(tokenDto.getAccessToken(), user));
     }
 
+
     @Operation(summary = "이메일 인증번호 발송", description = "이메일 중복시 에러 리턴, 이메일 인증번호 발송")
     @ApiResponse(responseCode = "3011", description = "중복된 닉네임 입니다.")
     @PostMapping("/email-verification/send")
@@ -75,6 +78,7 @@ public class AuthController {
         emailVerificationService.sendVerificationCode(sendVerificationCodeRequestDto);
         return ResponseEntity.noContent().build();
     }
+
 
     @Operation(summary = "이메일 인증코드 검증", description = "이메일 인증번호 미일치 시 에러 반환")
     @ApiResponse(responseCode = "400", description = "잘못된 이메일 입력입니다.")
