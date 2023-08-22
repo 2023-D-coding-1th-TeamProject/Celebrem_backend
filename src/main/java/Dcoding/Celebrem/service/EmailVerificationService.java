@@ -44,7 +44,7 @@ public class EmailVerificationService {
 
     public void verifyEmailDuplication(SendVerificationCodeRequestDto sendVerificationCodeRequestDto) {
         if (memberRepository.existsMemberByEmail(sendVerificationCodeRequestDto.getEmail())) {
-            throw new IllegalArgumentException("중복되는 이메일이 존재합니다.");
+            throw new BadRequestException("중복되는 이메일이 존재합니다.");
         }
     }
 
