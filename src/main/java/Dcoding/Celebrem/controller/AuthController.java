@@ -1,7 +1,8 @@
 package Dcoding.Celebrem.controller;
 
-import Dcoding.Celebrem.dto.email.SendVerificationCodeRequestDto;
-import Dcoding.Celebrem.dto.email.VerifyRequestDto;
+import Dcoding.Celebrem.dto.verify.NicknameVerifyRequestDto;
+import Dcoding.Celebrem.dto.verify.SendVerificationCodeRequestDto;
+import Dcoding.Celebrem.dto.verify.EmailVerifyRequestDto;
 import Dcoding.Celebrem.dto.member.MemberCreateRequestDto;
 import Dcoding.Celebrem.dto.token.LoginDto;
 import Dcoding.Celebrem.dto.token.token.TokenDto;
@@ -40,8 +41,8 @@ public class AuthController {
     @Operation(summary = "회원 가입 닉네임 중복 검증", description = "닉네임 중복 시에 에러 리턴")
     @ApiResponse(responseCode = "400", description = "이미 사용하고 있는 닉네임입니다.")
     @PostMapping("/signup/nickname-verification")
-    public ResponseEntity<Void> verifyNickname(@RequestBody MemberCreateRequestDto memberCreateRequestDto) {
-        authService.verifyNicknameDuplication(memberCreateRequestDto.getNickname());
+    public ResponseEntity<Void> verifyNickname(@RequestBody NicknameVerifyRequestDto nicknameVerifyRequestDto) {
+        authService.verifyNicknameDuplication(nicknameVerifyRequestDto);
         return ResponseEntity.noContent().build();
     }
 
@@ -84,8 +85,8 @@ public class AuthController {
     @ApiResponse(responseCode = "400", description = "잘못된 이메일 입력입니다.")
     @ApiResponse(responseCode = "401", description = "인증번호가 올바르지 않습니다.")
     @PostMapping("/email-verification/verify")
-    public ResponseEntity<Void> verifyCode(@RequestBody VerifyRequestDto verifyRequestDto) {
-        emailVerificationService.verify(verifyRequestDto);
+    public ResponseEntity<Void> verifyCode(@RequestBody EmailVerifyRequestDto emailVerifyRequestDto) {
+        emailVerificationService.verify(emailVerifyRequestDto);
         return ResponseEntity.noContent().build();
     }
 

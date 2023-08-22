@@ -2,8 +2,8 @@ package Dcoding.Celebrem.service;
 
 import Dcoding.Celebrem.common.exception.BadRequestException;
 import Dcoding.Celebrem.domain.verification.EmailVerification;
-import Dcoding.Celebrem.dto.email.SendVerificationCodeRequestDto;
-import Dcoding.Celebrem.dto.email.VerifyRequestDto;
+import Dcoding.Celebrem.dto.verify.SendVerificationCodeRequestDto;
+import Dcoding.Celebrem.dto.verify.EmailVerifyRequestDto;
 import Dcoding.Celebrem.repository.EmailVerificationRepository;
 import Dcoding.Celebrem.repository.MemberRepository;
 import jakarta.mail.MessagingException;
@@ -64,10 +64,10 @@ public class EmailVerificationService {
         emailVerificationRepository.save(emailVerification);
     }
 
-    public void verify(VerifyRequestDto verifyRequestDto) {
-        EmailVerification emailVerification = emailVerificationRepository.findByEmail(verifyRequestDto.getEmail()).orElseThrow(
+    public void verify(EmailVerifyRequestDto emailVerifyRequestDto) {
+        EmailVerification emailVerification = emailVerificationRepository.findByEmail(emailVerifyRequestDto.getEmail()).orElseThrow(
                 () -> new BadRequestException("잘못된 이메일 입력입니다.")); // TODO : customException Refactor
-        emailVerification.verify(verifyRequestDto);
+        emailVerification.verify(emailVerifyRequestDto);
         emailVerificationRepository.delete(emailVerification); // TODO : 인증 완료시 DB 인증코드 데이터 삭제 (왜 안됨?)
     }
 

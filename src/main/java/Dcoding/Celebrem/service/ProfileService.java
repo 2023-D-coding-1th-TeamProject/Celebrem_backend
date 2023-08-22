@@ -3,6 +3,7 @@ package Dcoding.Celebrem.service;
 import Dcoding.Celebrem.common.exception.NotFoundException;
 import Dcoding.Celebrem.common.exception.UnauthorizedException;
 import Dcoding.Celebrem.common.util.SecurityUtil;
+import Dcoding.Celebrem.domain.member.Authority;
 import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.domain.member.Profile;
 import Dcoding.Celebrem.domain.member.SortCondition;
@@ -32,11 +33,12 @@ public class ProfileService {
     private final TagRepository tagRepository;
 
     @Transactional
-    public void registerInfluencer(RegisterInfluencerRequestDto requestDto) {
+    public RegisterInfluencerResponseDto registerInfluencer(RegisterInfluencerRequestDto requestDto) {
         Profile profile = memberRepository.findByEmailFetchProfile(SecurityUtil.getCurrentMemberEmail()).orElseThrow(
                 () -> new UnauthorizedException("로그인이 필요합니다")).getProfile();
 
         profile.registerInfluencer(requestDto);
+        return new RegisterInfluencerResponseDto(Authority.ROLE_INFLUENCER);
     }
 
     @Transactional

@@ -1,10 +1,7 @@
 package Dcoding.Celebrem.controller;
 
 import Dcoding.Celebrem.dto.member.MemberProfileRequestDto;
-import Dcoding.Celebrem.dto.profile.InfluencerProfileResponseDto;
-import Dcoding.Celebrem.dto.profile.RegisterInfluencerRequestDto;
-import Dcoding.Celebrem.dto.profile.UpdateProfileImageRequestDto;
-import Dcoding.Celebrem.dto.profile.UpdateProfileRequestDto;
+import Dcoding.Celebrem.dto.profile.*;
 import Dcoding.Celebrem.dto.tag.TagSetupRequestDto;
 import Dcoding.Celebrem.service.ProfileService;
 import Dcoding.Celebrem.service.TagService;
@@ -43,10 +40,9 @@ public class MemberController {
             @ApiResponse(responseCode = "404", description = "없는 태그명입니다")
     })
     @PostMapping("/register-influencer")
-    public ResponseEntity<Void> RegisterInfluencer(@RequestBody @Valid RegisterInfluencerRequestDto requestDto) {
+    public ResponseEntity<RegisterInfluencerResponseDto> RegisterInfluencer(@RequestBody @Valid RegisterInfluencerRequestDto requestDto) {
         tagService.setUpProfileTags(new TagSetupRequestDto(requestDto.getTagNames()));
-        profileService.registerInfluencer(requestDto);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(profileService.registerInfluencer(requestDto));
     }
 
     @Operation(summary = "프로필 정보 수정을 위한 기존 프로필 정보 반환", description = "인플루언서가 아니라면 인플루언서 프로필 정보들은 null로 반환됨")

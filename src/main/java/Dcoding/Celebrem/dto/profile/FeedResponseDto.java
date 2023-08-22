@@ -7,6 +7,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class FeedResponseDto {
+
+    private Long influencerId;
     private String nickname;
     private String imageUrl;
     private Long likeCount;
@@ -14,10 +16,12 @@ public class FeedResponseDto {
     private boolean isLike;
 
     @Builder
-    public FeedResponseDto(String nickname, String imageUrl, Long likeCount, List<String> tagNames, boolean isLike) {
+    public FeedResponseDto(Long influencerId, String nickname, String imageUrl, Long likeCount, List<String> tagNames, boolean isLike) {
+        this.influencerId = influencerId;
         this.nickname = nickname;
         this.imageUrl = imageUrl;
         this.likeCount = likeCount;
+        this.tagNames = tagNames;
         this.isLike = isLike;
     }
 }

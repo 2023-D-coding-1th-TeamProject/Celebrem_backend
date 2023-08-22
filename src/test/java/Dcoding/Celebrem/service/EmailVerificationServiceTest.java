@@ -1,21 +1,17 @@
 package Dcoding.Celebrem.service;
 
 import Dcoding.Celebrem.domain.member.Member;
-import Dcoding.Celebrem.dto.email.SendVerificationCodeRequestDto;
+import Dcoding.Celebrem.dto.verify.SendVerificationCodeRequestDto;
 import Dcoding.Celebrem.repository.EmailVerificationRepository;
 import Dcoding.Celebrem.repository.MemberRepository;
 import jakarta.mail.MessagingException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class EmailVerificationServiceTest {

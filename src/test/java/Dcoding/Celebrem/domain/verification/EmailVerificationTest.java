@@ -1,6 +1,6 @@
 package Dcoding.Celebrem.domain.verification;
 
-import Dcoding.Celebrem.dto.email.VerifyRequestDto;
+import Dcoding.Celebrem.dto.verify.EmailVerifyRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,10 +17,10 @@ class EmailVerificationTest {
 
         EmailVerification emailVerification = new EmailVerification(RECIPIENT_EMAIL);
         String code = emailVerification.generateCode();
-        VerifyRequestDto verifyRequestDto = new VerifyRequestDto(RECIPIENT_EMAIL, code);
+        EmailVerifyRequestDto emailVerifyRequestDto = new EmailVerifyRequestDto(RECIPIENT_EMAIL, code);
 
         //when, then
-        emailVerification.verify(verifyRequestDto);
+        emailVerification.verify(emailVerifyRequestDto);
 
     }
 }

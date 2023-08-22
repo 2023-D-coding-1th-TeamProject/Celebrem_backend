@@ -1,5 +1,6 @@
 package Dcoding.Celebrem.dto.profile;
 
+import Dcoding.Celebrem.domain.member.Authority;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,14 +15,16 @@ public class InfluencerProfileResponseDto {
     String instagramId;
     String profileImageUrl;
     String description;
+    Authority type;
     List<String> profileTagNames;
     
-    public InfluencerProfileResponseDto(String nickname, String email, String profileImageUrl, String description, String instagramId, List<String> profileTagNames) {
+    public InfluencerProfileResponseDto(String nickname, String email, String profileImageUrl, String description, String instagramId, Authority type, List<String> profileTagNames) {
         this.nickname = nickname;
         this.email = email;
         this.profileImageUrl = profileImageUrl;
         this.instagramId = instagramId;
         this.description = description;
+        this.type = type;
         this.profileTagNames = profileTagNames;
     }
 }
