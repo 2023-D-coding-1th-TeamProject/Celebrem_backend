@@ -41,10 +41,18 @@ public class EmailVerification {
         return code.toString();
     }
 
-    public void verify(VerifyRequestDto verifyRequestDto) {
-        if (!expiredDate.isAfter(LocalDateTime.now()) || !code.equals(verifyRequestDto.getCode())) {
-            throw new UnauthorizedException("인증번호가 올바르지 않습니다.");
+    public VerificationEventType verify(VerifyRequestDto verifyRequestDto) {
+        if (!expiredDate.isAfter(LocalDateTime.now())) {
+            return VerificationEventType.FAILURE;
         }
+        if (!code.equals(verifyRequestDto.getCode())) {
+            return VerificationEventType.EXPIRED;
+        }
+        return VerificationEventType.SUCCESS;
+    }
+
+    public String getCodeForTest() {
+        return this.code;
     }
 
 }
