@@ -1,9 +1,7 @@
 package Dcoding.Celebrem.controller;
 
-import Dcoding.Celebrem.dto.member.MemberProfileRequestDto;
 import Dcoding.Celebrem.dto.profile.InfluencerProfileResponseDto;
 import Dcoding.Celebrem.dto.profile.RegisterInfluencerRequestDto;
-import Dcoding.Celebrem.dto.profile.UpdateProfileImageRequestDto;
 import Dcoding.Celebrem.dto.profile.UpdateProfileRequestDto;
 import Dcoding.Celebrem.dto.tag.TagSetupRequestDto;
 import Dcoding.Celebrem.service.ProfileService;
@@ -14,8 +12,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -80,9 +82,9 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "프로필 이미지 변경 성공"),
             @ApiResponse(responseCode = "401", description = "로그인이 필요합니다" )
     })
-    @PutMapping("/my-profile/change-image")
-    public ResponseEntity<Void> updateProfileImage(@RequestBody UpdateProfileImageRequestDto updateProfileImageRequestDto) {
-        profileService.updateProfileImage(updateProfileImageRequestDto);
+    @PutMapping(path = "/my-profile/change-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updateProfileImage(@RequestPart("image") MultipartFile image) throws IOException {
+        profileService.updateProfileImage(image);
         return ResponseEntity.noContent().build();
     }
 
