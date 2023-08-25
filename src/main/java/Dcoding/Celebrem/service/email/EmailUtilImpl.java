@@ -17,7 +17,7 @@ import java.nio.file.Path;
 
 @Component
 @RequiredArgsConstructor
-public class EmailUtilImpl {
+public class EmailUtilImpl implements EmailUtil{
 
     private final JavaMailSender javaMailSender;
 
@@ -27,6 +27,7 @@ public class EmailUtilImpl {
     @Value("emailVerificationTemplate.html")
     private String templateFileName;
 
+    @Override
     public void sendVerificationCode(String email, String code) throws MessagingException, IOException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);

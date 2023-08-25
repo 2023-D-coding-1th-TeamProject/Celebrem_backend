@@ -52,8 +52,8 @@ public class Profile extends BaseEntity {
     private static final Logger logger = LoggerFactory.getLogger(Profile.class);
 
     //--연관관계 메서드--//
-    public void changeProfileImage(UpdateProfileImageRequestDto updateProfileImageRequestDto) {
-        this.profileImageUrl = updateProfileImageRequestDto.getImageUrl();
+    public void changeProfileImage(String imageUrl) {
+        this.profileImageUrl = imageUrl;
     }
 
     public void addProfileTag(ProfileTag profileTag) {

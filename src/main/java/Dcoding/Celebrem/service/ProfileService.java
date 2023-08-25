@@ -16,7 +16,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +32,7 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
     private final MemberRepository memberRepository;
     private final TagRepository tagRepository;
+    private final S3UploadUtil s3UploadUtil;
 
     @Transactional
     public void registerInfluencer(RegisterInfluencerRequestDto requestDto) {
@@ -53,11 +56,14 @@ public class ProfileService {
         return profile.getInfluencerProfile();
     }
 
-    public void updateProfileImage(UpdateProfileImageRequestDto updateProfileImageRequestDto) {
+    @Transactional
+    public void updateProfileImage(MultipartFile image) throws IOException {
         Profile profile = memberRepository.findByEmailFetchProfile(SecurityUtil.getCurrentMemberEmail()).orElseThrow(
                 () -> new UnauthorizedException("로그인이 필요합니다")).getProfile();
+        if (profile.getProfileImageUrl() != null && !profile.getProfileImageUrl().isEmpty()) s3UploadUtil.fileDelete(profile.getProfileImageUrl());
 
-        profile.changeProfileImage(updateProfileImageRequestDto);
+        String imageUrl = s3UploadUtil.upload(image);
+        profile.changeProfileImage(imageUrl);
     }
 
     public InfluencerProfileResponseDto getMyProfile() {
