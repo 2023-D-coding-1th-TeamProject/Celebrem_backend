@@ -1,13 +1,14 @@
 package Dcoding.Celebrem.domain.verification;
 
-import Dcoding.Celebrem.domain.member.Member;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
+@Getter
 public class EmailVerificationHistory {
     @Id
     @GeneratedValue
@@ -26,10 +27,6 @@ public class EmailVerificationHistory {
         this.attemptAt = LocalDateTime.now();
         this.emailVerification = emailVerification;
         this.verificationEventType = verificationEventType;
-    }
-
-    public boolean eventTypeTest(VerificationEventType verificationEventType) {
-        return this.verificationEventType.equals(verificationEventType) ;
     }
 }
 

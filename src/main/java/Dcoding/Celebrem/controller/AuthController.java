@@ -7,7 +7,7 @@ import Dcoding.Celebrem.dto.token.LoginDto;
 import Dcoding.Celebrem.dto.token.token.TokenDto;
 import Dcoding.Celebrem.dto.token.token.TokenRequestDto;
 import Dcoding.Celebrem.service.AuthService;
-import Dcoding.Celebrem.service.EmailVerificationService;
+import Dcoding.Celebrem.service.email.EmailVerificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

@@ -26,6 +26,12 @@ public class EmailVerification {
 
     public EmailVerification(String email) {
         this.email = email;
+        this.expiredDate = LocalDateTime.now().plusMinutes(3);
+    }
+
+    public EmailVerification(String email, LocalDateTime expiredDate) {
+        this.email = email;
+        this.expiredDate = expiredDate;
     }
 
     public String generateCode() {
@@ -37,22 +43,17 @@ public class EmailVerification {
         for (int i = 0; i < CODE_LENGTH; i++) code.append((char) ((int) (random.nextInt(26)) + 65)); //  A~Z
 
         this.code = code.toString();
-        this.expiredDate = LocalDateTime.now().plusMinutes(3);
-        return code.toString();
+        return this.code;
     }
 
     public VerificationEventType verify(VerifyRequestDto verifyRequestDto) {
         if (!expiredDate.isAfter(LocalDateTime.now())) {
-            return VerificationEventType.FAILURE;
-        }
-        if (!code.equals(verifyRequestDto.getCode())) {
             return VerificationEventType.EXPIRED;
         }
+        if (!code.equals(verifyRequestDto.getCode())) {
+            return VerificationEventType.FAILURE;
+        }
         return VerificationEventType.SUCCESS;
-    }
-
-    public String getCodeForTest() {
-        return this.code;
     }
 
 }

@@ -1,4 +1,4 @@
-package Dcoding.Celebrem.service;
+package Dcoding.Celebrem.tag;
 
 import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.domain.tag.ProfileTag;
@@ -7,6 +7,7 @@ import Dcoding.Celebrem.dto.tag.TagSetupRequestDto;
 import Dcoding.Celebrem.repository.MemberRepository;
 import Dcoding.Celebrem.repository.ProfileTagRepository;
 import Dcoding.Celebrem.repository.TagRepository;
+import Dcoding.Celebrem.service.TagService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

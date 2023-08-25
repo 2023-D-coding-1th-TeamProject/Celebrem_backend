@@ -1,4 +1,4 @@
-package Dcoding.Celebrem.service;
+package Dcoding.Celebrem.service.email;
 
 import Dcoding.Celebrem.common.exception.BadRequestException;
 import Dcoding.Celebrem.domain.verification.EmailVerification;
@@ -10,20 +10,11 @@ import Dcoding.Celebrem.repository.EmailVerificationHistoryRepository;
 import Dcoding.Celebrem.repository.EmailVerificationRepository;
 import Dcoding.Celebrem.repository.MemberRepository;
 import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Optional;
 
 @Service
@@ -31,15 +22,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class EmailVerificationService {
 
-    private final JavaMailSender javaMailSender;
+    private final EmailUtil emailUtil;
     private final EmailVerificationRepository emailVerificationRepository;
     private final MemberRepository memberRepository;
-
-    @Value("${spring.mail.username}")
-    private String sender;
-
-    @Value("emailVerificationTemplate.html")
-    private String templateFileName;
     private final EmailVerificationHistoryRepository emailVerificationHistoryRepository;
 
     public void verifyEmailDuplication(SendVerificationCodeRequestDto sendVerificationCodeRequestDto) {
@@ -50,21 +35,8 @@ public class EmailVerificationService {
 
     @Transactional
     public void sendVerificationCode(SendVerificationCodeRequestDto recipient) throws MessagingException, IOException {
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
         EmailVerification emailVerification = findOrCreateEmailVerification(recipient.getEmail());
-
-        String code = emailVerification.generateCode();
-
-        helper.setFrom(sender, "Celebrem");
-        helper.setTo(recipient.getEmail());
-        helper.setSubject("Celebrem 회원 가입 인증 코드가 발송되었습니다.");
-
-        String templateContent = readTemplateContent(templateFileName);
-        templateContent = templateContent.replace("{{ePw}}", code);
-        helper.setText(templateContent, true);
-        javaMailSender.send(message);
-
+        emailUtil.sendVerificationCode(recipient.getEmail(), emailVerification.generateCode());
         emailVerificationRepository.save(emailVerification);
     }
 
@@ -85,13 +57,6 @@ public class EmailVerificationService {
         }
 
         return emailVerification.get();
-    }
-
-    private String readTemplateContent(String templateFileName) throws IOException {
-        Resource resource = new ClassPathResource(templateFileName);
-        Path filePath = resource.getFile().toPath();
-
-        return Files.readString(filePath, StandardCharsets.UTF_8);
     }
 
 }
