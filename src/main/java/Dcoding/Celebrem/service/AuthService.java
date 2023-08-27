@@ -35,7 +35,7 @@ public class AuthService {
      */
     @Transactional
     public void memberSignup(MemberCreateRequestDto memberCreateRequestDto) {
-        if (memberRepository.existsMemberByEmail(memberCreateRequestDto.getUserName())) {
+        if (memberRepository.existsMemberByEmail(memberCreateRequestDto.getEmail())) {
             throw new BadRequestException("이미 가입되어 있는 유저입니다");
         }
         Member member = memberCreateRequestDto.toMember(passwordEncoder);

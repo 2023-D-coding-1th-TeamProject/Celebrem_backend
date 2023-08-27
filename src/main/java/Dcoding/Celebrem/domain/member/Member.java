@@ -26,16 +26,8 @@ public class Member extends BaseEntity {
     @Column(name ="member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column
     private String email;
-
-    private String phoneNumber;
-
-    @Column
     private String password;
-
-    @Column
     private String nickname;
 
     @Enumerated(EnumType.STRING)
@@ -49,9 +41,8 @@ public class Member extends BaseEntity {
     private List<Likes> likes = new ArrayList<>();
 
     @Builder
-    public Member(String email, String phoneNumber, String password, String nickname, Profile profile){
+    public Member(String email, String password, String nickname){
         this.email = email;
-        this.phoneNumber = phoneNumber;
         this.password = password;
         this.nickname = nickname;
         this.authority = ROLE_USER;
