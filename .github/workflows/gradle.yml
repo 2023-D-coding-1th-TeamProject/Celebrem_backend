@@ -35,7 +35,7 @@ jobs:
 
     steps:
       - name: deploy server
-        timeout-minutes: 1
+        timeout-minutes: 2
         continue-on-error: true
         uses: appleboy/ssh-action@v0.1.6
         with:
