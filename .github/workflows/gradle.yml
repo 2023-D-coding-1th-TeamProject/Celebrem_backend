@@ -24,6 +24,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }} # 접속포트
           script: |            
             cd celebrem/Celebrem_backend
+            git remote update
             git pull origin main
             chmod +x gradlew
             ./gradlew clean build -x test --parallel
