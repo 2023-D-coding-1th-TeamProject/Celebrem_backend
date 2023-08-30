@@ -13,7 +13,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
     Profile findByMember_Id(Long memberId);
 
     @Query("SELECT p FROM Profile p JOIN FETCH p.member pm LEFT JOIN p.profileTags pt " +
-            "WHERE :tagName = pt.tag.name")
+            "WHERE (:tagName IS NULL OR pt.tag.name = :tagName)")
     Page<Profile> findByTagNameFetch(@Param("tagName") String tagName, Pageable pageable);
 
     @Query("SELECT p FROM Profile p JOIN FETCH p.member pm LEFT JOIN p.profileTags pt " +
