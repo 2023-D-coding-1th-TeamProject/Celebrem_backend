@@ -5,8 +5,8 @@ import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.domain.verification.EmailVerification;
 import Dcoding.Celebrem.domain.verification.EmailVerificationHistory;
 import Dcoding.Celebrem.domain.verification.VerificationEventType;
-import Dcoding.Celebrem.dto.email.SendVerificationCodeRequestDto;
-import Dcoding.Celebrem.dto.email.VerifyRequestDto;
+import Dcoding.Celebrem.dto.verify.EmailVerifyRequestDto;
+import Dcoding.Celebrem.dto.verify.SendVerificationCodeRequestDto;
 import Dcoding.Celebrem.repository.EmailVerificationHistoryRepository;
 import Dcoding.Celebrem.repository.EmailVerificationRepository;
 import Dcoding.Celebrem.repository.MemberRepository;
@@ -65,7 +65,7 @@ class EmailVerificationServiceTest {
     public void verifyEmailDuplication() {
         // given
         final String EMAIL = "test001@gmail.com";
-        Member member = Member.builder().email(EMAIL).nickname("test").phoneNumber("test").password("test").build();
+        Member member = Member.builder().email(EMAIL).nickname("test").password("test").build();
         memberRepository.save(member);
 
         final SendVerificationCodeRequestDto sendVerificationCodeRequestDto = new SendVerificationCodeRequestDto(EMAIL);
@@ -87,7 +87,7 @@ class EmailVerificationServiceTest {
         emailVerificationService.sendVerificationCode(sendVerificationCodeRequestDto);
         EmailVerification emailVerification = emailVerificationRepository.findByEmail(sendVerificationCodeRequestDto.getEmail()).orElseThrow(
                 () -> new BadRequestException("해당 이메일의 인증 정보가 없습니다."));
-        VerifyRequestDto verifyRequestDto = new VerifyRequestDto(EMAIL, emailVerification.getCode());
+        EmailVerifyRequestDto verifyRequestDto = new EmailVerifyRequestDto(EMAIL, emailVerification.getCode());
         emailVerificationService.verify(verifyRequestDto);
 
         //then

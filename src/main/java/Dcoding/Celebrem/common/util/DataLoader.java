@@ -23,12 +23,5 @@ public class DataLoader implements ApplicationRunner {
     @Override
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
-        tagRepository.save(new Tag("게임"));
-        tagRepository.save(new Tag("스포츠"));
-        tagRepository.save(new Tag("뷰티"));
-        tagRepository.save(new Tag("건강"));
-        tagRepository.save(new Tag("언어"));
-        tagRepository.save(new Tag("IT"));
-        tagRepository.save(new Tag("음식"));
     }
 }

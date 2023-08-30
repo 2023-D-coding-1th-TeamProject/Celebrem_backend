@@ -2,7 +2,7 @@ package Dcoding.Celebrem.verification.domain;
 
 import Dcoding.Celebrem.domain.verification.EmailVerification;
 import Dcoding.Celebrem.domain.verification.VerificationEventType;
-import Dcoding.Celebrem.dto.email.VerifyRequestDto;
+import Dcoding.Celebrem.dto.verify.EmailVerifyRequestDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ class EmailVerificationTest {
         final String RECIPIENT_EMAIL = "nbw970508@gmail.com";
         final EmailVerification emailVerification = new EmailVerification(RECIPIENT_EMAIL);
         final String code = emailVerification.generateCode();
-        final VerifyRequestDto verifyRequestDto = new VerifyRequestDto(RECIPIENT_EMAIL, code);
+        final EmailVerifyRequestDto verifyRequestDto = new EmailVerifyRequestDto(RECIPIENT_EMAIL, code);
 
         // when
         VerificationEventType actual = emailVerification.verify(verifyRequestDto);
@@ -34,7 +34,7 @@ class EmailVerificationTest {
         final String RECIPIENT_EMAIL = "nbw970508@gmail.com";
         final EmailVerification emailVerification = new EmailVerification(RECIPIENT_EMAIL);
         final String code = emailVerification.generateCode() + "fail";
-        final VerifyRequestDto verifyRequestDto = new VerifyRequestDto(RECIPIENT_EMAIL, code);
+        final EmailVerifyRequestDto verifyRequestDto = new EmailVerifyRequestDto(RECIPIENT_EMAIL, code);
 
         // when
         VerificationEventType actual = emailVerification.verify(verifyRequestDto);
@@ -50,7 +50,7 @@ class EmailVerificationTest {
         final String RECIPIENT_EMAIL = "nbw970508@gmail.com";
         final EmailVerification emailVerification = new EmailVerification(RECIPIENT_EMAIL, LocalDateTime.now());
         final String code = emailVerification.generateCode();
-        final VerifyRequestDto verifyRequestDto = new VerifyRequestDto(RECIPIENT_EMAIL, code);
+        final EmailVerifyRequestDto verifyRequestDto = new EmailVerifyRequestDto(RECIPIENT_EMAIL, code);
 
         // when
         VerificationEventType actual = emailVerification.verify(verifyRequestDto);

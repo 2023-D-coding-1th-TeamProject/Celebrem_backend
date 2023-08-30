@@ -4,8 +4,8 @@ import Dcoding.Celebrem.common.exception.BadRequestException;
 import Dcoding.Celebrem.domain.verification.EmailVerification;
 import Dcoding.Celebrem.domain.verification.EmailVerificationHistory;
 import Dcoding.Celebrem.domain.verification.VerificationEventType;
-import Dcoding.Celebrem.dto.email.SendVerificationCodeRequestDto;
-import Dcoding.Celebrem.dto.email.VerifyRequestDto;
+import Dcoding.Celebrem.dto.verify.EmailVerifyRequestDto;
+import Dcoding.Celebrem.dto.verify.SendVerificationCodeRequestDto;
 import Dcoding.Celebrem.repository.EmailVerificationHistoryRepository;
 import Dcoding.Celebrem.repository.EmailVerificationRepository;
 import Dcoding.Celebrem.repository.MemberRepository;
@@ -41,7 +41,7 @@ public class EmailVerificationService {
     }
 
     @Transactional
-    public void verify(VerifyRequestDto verifyRequestDto) {
+    public void verify(EmailVerifyRequestDto verifyRequestDto) {
         EmailVerification emailVerification = emailVerificationRepository.findByEmail(verifyRequestDto.getEmail()).orElseThrow(
                 () -> new BadRequestException("잘못된 입력입니다.")); // TODO : customException Refactor
         VerificationEventType verificationEventType = emailVerification.verify(verifyRequestDto);

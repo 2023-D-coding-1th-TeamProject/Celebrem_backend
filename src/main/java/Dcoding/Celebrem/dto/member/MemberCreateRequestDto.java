@@ -1,7 +1,6 @@
 package Dcoding.Celebrem.dto.member;
 
 import Dcoding.Celebrem.domain.member.Member;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -12,9 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberCreateRequestDto {
-    @NotNull
     private String email;
-    @NotNull
     private String password;
     private String nickname;
     public Member toMember(PasswordEncoder passwordEncoder) {

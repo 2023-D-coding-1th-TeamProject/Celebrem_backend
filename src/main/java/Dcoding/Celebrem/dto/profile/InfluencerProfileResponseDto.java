@@ -1,5 +1,6 @@
 package Dcoding.Celebrem.dto.profile;
 
+import Dcoding.Celebrem.domain.member.Authority;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -3,13 +3,13 @@ package Dcoding.Celebrem.service;
 import Dcoding.Celebrem.common.exception.NotFoundException;
 import Dcoding.Celebrem.common.exception.UnauthorizedException;
 import Dcoding.Celebrem.common.util.SecurityUtil;
+import Dcoding.Celebrem.domain.member.Authority;
 import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.domain.member.Profile;
 import Dcoding.Celebrem.domain.member.SortCondition;
 import Dcoding.Celebrem.dto.profile.*;
 import Dcoding.Celebrem.repository.MemberRepository;
 import Dcoding.Celebrem.repository.ProfileRepository;
-import Dcoding.Celebrem.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,11 +34,12 @@ public class ProfileService {
     private final S3UploadUtil s3UploadUtil;
 
     @Transactional
-    public void registerInfluencer(RegisterInfluencerRequestDto requestDto) {
+    public RegisterInfluencerResponseDto registerInfluencer(RegisterInfluencerRequestDto requestDto) {
         Profile profile = memberRepository.findByEmailFetchProfile(SecurityUtil.getCurrentMemberEmail()).orElseThrow(
                 () -> new UnauthorizedException("로그인이 필요합니다")).getProfile();
 
         profile.registerInfluencer(requestDto);
+        return new RegisterInfluencerResponseDto(Authority.ROLE_INFLUENCER);
     }
 
     @Transactional
@@ -76,56 +77,44 @@ public class ProfileService {
         Pageable pageable = PageRequest.of(page - 1, 10);
 
         if (member.isEmpty()) return getFeedForNonMembers(tagName, pageable, sortCondition);
-
         return getFeedForMembers(member.get(), tagName, pageable, sortCondition);
-
     }
 
-    public List<FeedResponseDto> getFeedForNonMembers(String tagName, Pageable pageable, SortCondition sortCondition) {
+    private List<FeedResponseDto> getFeedForNonMembers(String tagName, Pageable pageable, SortCondition sortCondition) {
         if (sortCondition.equals(SortCondition.RANDOM)) {
             Page<Profile> profiles = profileRepository.findByTagNameFetch(tagName, pageable);
-            List<FeedResponseDto> result = profiles.stream().map(p ->
-                    FeedResponseDto.builder().nickname(p.getMember().getNickname())
-                            .imageUrl(p.getProfileImageUrl())
-                            .likeCount(p.getLikeCount())
-                            .isLike(false)
-                            .tagNames(p.getProfileTagNames())
-                            .build()).collect(Collectors.toList());
-
+            List<FeedResponseDto> result = profiles.stream().map(p -> new FeedResponseDto(p)).collect(Collectors.toList());
             Collections.shuffle(result);
             return result;
         }
         Page<Profile> profiles = profileRepository.findByTagNameFetchOrderByLikeCount(tagName, pageable);
-        return profiles.stream().map(p ->
-                FeedResponseDto.builder().nickname(p.getMember().getNickname())
-                        .imageUrl(p.getProfileImageUrl())
-                        .likeCount(p.getLikeCount())
-                        .isLike(false)
-                        .tagNames(p.getProfileTagNames())
-                        .build()).collect(Collectors.toList());
-
+        return profiles.stream().map(p -> new FeedResponseDto(p)).collect(Collectors.toList());
     }
 
-    public List<FeedResponseDto> getFeedForMembers(Member member, String tagName, Pageable pageable, SortCondition sortCondition) {
+    private List<FeedResponseDto> getFeedForMembers(Member member, String tagName, Pageable pageable, SortCondition sortCondition) {
         if (sortCondition.equals(SortCondition.RANDOM)) {
             Page<Profile> profiles = profileRepository.findByTagNameFetch(tagName, pageable);
-            List<FeedResponseDto> result = profiles.stream().map(p ->
-                    FeedResponseDto.builder().nickname(p.getMember().getNickname())
-                            .imageUrl(p.getProfileImageUrl())
-                            .likeCount(p.getLikeCount())
-                            .isLike(member.getProfile().getProfileTags().contains(p))
-                            .tagNames(p.getProfileTagNames())
-                            .build()).collect(Collectors.toList());
+            List<FeedResponseDto> result = profiles.stream().map(p -> new FeedResponseDto(member, p)).collect(Collectors.toList());
             Collections.shuffle(result);
             return result;
         }
         Page<Profile> profiles = profileRepository.findByTagNameFetchOrderByLikeCount(tagName, pageable);
-        return profiles.stream().map(p ->
-                FeedResponseDto.builder().nickname(p.getMember().getNickname())
-                        .imageUrl(p.getProfileImageUrl())
-                        .likeCount(p.getLikeCount())
-                        .isLike(member.getProfile().getProfileTags().contains(p))
-                        .tagNames(p.getProfileTagNames())
-                        .build()).collect(Collectors.toList());
+        return profiles.stream().map(p -> new FeedResponseDto(member, p)).collect(Collectors.toList());
+    }
+
+    public List<FeedResponseDto> getProfilesByNickname(String nickname) {
+        Optional<Member> member = memberRepository.findByEmailFetchProfile(SecurityUtil.getCurrentMemberEmail());
+        if(member.isPresent()) return getProfilesByNicknameForMember(member.get(), nickname);
+        return getProfilesByNicknameForNonMember(nickname);
+    }
+
+    private List<FeedResponseDto> getProfilesByNicknameForNonMember(String nickname) {
+        List<Profile> profiles = profileRepository.findAllByNickname(nickname);
+        return profiles.stream().map(p -> new FeedResponseDto(p)).collect(Collectors.toList());
+    }
+
+    private List<FeedResponseDto> getProfilesByNicknameForMember(Member member, String nickname) {
+        List<Profile> profiles = profileRepository.findAllByNickname(nickname);
+        return profiles.stream().map(p -> new FeedResponseDto(member, p)).collect(Collectors.toList());
     }
 }

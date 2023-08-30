@@ -1,4 +1,4 @@
-package Dcoding.Celebrem.dto.email;
+package Dcoding.Celebrem.dto.verify;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class VerifyRequestDto {
-
+public class SendVerificationCodeRequestDto {
     private String email;
-    private String code;
 }
