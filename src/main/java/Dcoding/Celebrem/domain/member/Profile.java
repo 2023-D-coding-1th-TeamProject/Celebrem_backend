@@ -99,4 +99,5 @@ public class Profile extends BaseEntity {
                 this.description,
                 this.getProfileTagNames());
     }
+
 }

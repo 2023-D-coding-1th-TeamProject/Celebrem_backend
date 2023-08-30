@@ -16,7 +16,7 @@ public class InfluencerProfileResponseDto {
     String description;
     List<String> profileTagNames;
     
-    public InfluencerProfileResponseDto(String nickname, String email, String profileImageUrl, String description, String instagramId, List<String> profileTagNames) {
+    public InfluencerProfileResponseDto(String nickname, String email, String profileImageUrl, String instagramId, String description, List<String> profileTagNames) {
         this.nickname = nickname;
         this.email = email;
         this.profileImageUrl = profileImageUrl;
