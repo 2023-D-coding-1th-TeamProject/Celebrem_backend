@@ -18,6 +18,7 @@ public class FeedResponseDto {
         this.nickname = nickname;
         this.imageUrl = imageUrl;
         this.likeCount = likeCount;
+        this.tagNames = tagNames;
         this.isLike = isLike;
     }
 }
