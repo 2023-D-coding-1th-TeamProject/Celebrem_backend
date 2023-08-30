@@ -31,7 +31,6 @@ public class ProfileService {
 
     private final ProfileRepository profileRepository;
     private final MemberRepository memberRepository;
-    private final TagRepository tagRepository;
     private final S3UploadUtil s3UploadUtil;
 
     @Transactional
@@ -90,8 +89,9 @@ public class ProfileService {
                             .imageUrl(p.getProfileImageUrl())
                             .likeCount(p.getLikeCount())
                             .isLike(false)
-                            .tagNames(p.getProfileTags().stream().map(pt -> pt.getTag().getName()).collect(Collectors.toList()))
+                            .tagNames(p.getProfileTagNames())
                             .build()).collect(Collectors.toList());
+
             Collections.shuffle(result);
             return result;
         }
@@ -101,6 +101,7 @@ public class ProfileService {
                         .imageUrl(p.getProfileImageUrl())
                         .likeCount(p.getLikeCount())
                         .isLike(false)
+                        .tagNames(p.getProfileTagNames())
                         .build()).collect(Collectors.toList());
 
     }
@@ -113,7 +114,7 @@ public class ProfileService {
                             .imageUrl(p.getProfileImageUrl())
                             .likeCount(p.getLikeCount())
                             .isLike(member.getProfile().getProfileTags().contains(p))
-                            .tagNames(p.getProfileTags().stream().map(pt -> pt.getTag().getName()).collect(Collectors.toList()))
+                            .tagNames(p.getProfileTagNames())
                             .build()).collect(Collectors.toList());
             Collections.shuffle(result);
             return result;
@@ -124,6 +125,7 @@ public class ProfileService {
                         .imageUrl(p.getProfileImageUrl())
                         .likeCount(p.getLikeCount())
                         .isLike(member.getProfile().getProfileTags().contains(p))
+                        .tagNames(p.getProfileTagNames())
                         .build()).collect(Collectors.toList());
     }
 }
