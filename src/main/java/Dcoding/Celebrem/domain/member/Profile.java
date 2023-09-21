@@ -90,13 +90,14 @@ public class Profile extends BaseEntity {
         this.instagramId = updateProfileDto.getInstagramId();
     }
 
-    public InfluencerProfileResponseDto getInfluencerProfile() {
+    public InfluencerProfileResponseDto getInfluencerProfile(boolean isLike) {
         return new InfluencerProfileResponseDto(
                 member.getNickname(),
                 member.getEmail(),
                 this.profileImageUrl,
                 this.instagramId,
                 this.description,
+                isLike,
                 this.getProfileTagNames());
     }
 }

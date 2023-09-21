@@ -50,9 +50,13 @@ public class ProfileService {
     }
 
     public InfluencerProfileResponseDto getInfluencerProfile(Long profileId) {
-        Profile profile = profileRepository.findById(profileId).orElseThrow(
+        Optional<Member> currentMember = memberRepository.findByEmailFetchLikes(SecurityUtil.getCurrentMemberEmail());
+        Profile profile = profileRepository.findByIdFetch(profileId).orElseThrow(
                 () -> new NotFoundException("프로필(아이디: " + profileId + ")를 찾을 수 없습니다."));
-        return profile.getInfluencerProfile();
+        if (currentMember.isEmpty()) {
+            return profile.getInfluencerProfile(false);
+        }
+        return profile.getInfluencerProfile(currentMember.get().profileIsInLikes(profile));
     }
 
     public void updateProfileImage(UpdateProfileImageRequestDto updateProfileImageRequestDto) {
@@ -65,7 +69,7 @@ public class ProfileService {
     public InfluencerProfileResponseDto getMyProfile() {
         Profile profile = memberRepository.findByEmailFetchProfile(SecurityUtil.getCurrentMemberEmail()).orElseThrow(
                 () -> new UnauthorizedException("로그인이 필요합니다")).getProfile();
-        return profile.getInfluencerProfile();
+        return profile.getInfluencerProfile(false);
     }
 
     public List<FeedResponseDto> getFeed(String tagName, int page, SortCondition sortCondition) {

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static Dcoding.Celebrem.domain.member.Authority.ROLE_INFLUENCER;
 import static Dcoding.Celebrem.domain.member.Authority.ROLE_USER;
@@ -71,6 +72,16 @@ public class Member extends BaseEntity {
     public void changeRole() {
         if (this.authority.equals(ROLE_INFLUENCER)) throw new BadRequestException("이미 인플루언서가 등록된 유저입니다");
         this.authority = ROLE_INFLUENCER;
+    }
+
+    public boolean profileIsInLikes(Profile profile) {
+        Optional<Likes> like = likes.stream()
+                .filter(l -> l.getProfile().equals(profile))
+                .findFirst();
+        if (like.isEmpty()) {
+            return false;
+        }
+        return true;
     }
 
 }
