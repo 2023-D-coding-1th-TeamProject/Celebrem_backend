@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static Dcoding.Celebrem.domain.member.Authority.ROLE_INFLUENCER;
 import static Dcoding.Celebrem.domain.member.Authority.ROLE_USER;
@@ -33,11 +34,11 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Likes> likes = new ArrayList<>();
 
     @Builder
@@ -64,4 +65,13 @@ public class Member extends BaseEntity {
         this.authority = ROLE_INFLUENCER;
     }
 
+    public boolean profileIsInLikes(Profile profile) {
+        Optional<Likes> like = likes.stream()
+                .filter(l -> l.getProfile().equals(profile))
+                .findFirst();
+        if (like.isEmpty()) {
+            return false;
+        }
+        return true;
+    }
 }

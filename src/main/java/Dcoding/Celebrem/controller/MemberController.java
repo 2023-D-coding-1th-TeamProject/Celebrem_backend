@@ -5,6 +5,7 @@ import Dcoding.Celebrem.dto.profile.RegisterInfluencerRequestDto;
 import Dcoding.Celebrem.dto.profile.UpdateProfileRequestDto;
 import Dcoding.Celebrem.dto.profile.*;
 import Dcoding.Celebrem.dto.tag.TagSetupRequestDto;
+import Dcoding.Celebrem.service.MemberService;
 import Dcoding.Celebrem.service.ProfileService;
 import Dcoding.Celebrem.service.TagService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "회원 API")
@@ -27,6 +30,7 @@ public class MemberController {
 
     private final TagService tagService;
     private final ProfileService profileService;
+    private final MemberService memberService;
 
     @Operation(summary = "내 프로필 조회")
     @ApiResponses(value = {
@@ -86,6 +90,28 @@ public class MemberController {
     public ResponseEntity<Void> updateProfileImage(@RequestPart("image") MultipartFile image) throws IOException {
         profileService.updateProfileImage(image);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "회원 탈퇴")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공"),
+            @ApiResponse(responseCode = "401", description = "로그인이 필요합니다" )
+    })
+    @PutMapping("/my-profile/secession")
+    public ResponseEntity<Void> secession() {
+        memberService.secession();
+        return ResponseEntity.noContent().build();
+    }
+
+
+    @Operation(summary = "찜 목록 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "찜 목록 조회 성공"),
+            @ApiResponse(responseCode = "401", description = "로그인이 필요합니다")
+    })
+    @GetMapping("/my-profile/likes")
+    public ResponseEntity<List<InfluencerProfileResponseDto>> getInfluencerProfile() {
+        return ResponseEntity.ok(profileService.getLikeInfluencerProfile());
     }
 
 }

@@ -3,6 +3,7 @@ package Dcoding.Celebrem.service;
 import Dcoding.Celebrem.common.exception.NotFoundException;
 import Dcoding.Celebrem.common.exception.UnauthorizedException;
 import Dcoding.Celebrem.common.util.SecurityUtil;
+import Dcoding.Celebrem.domain.likes.Likes;
 import Dcoding.Celebrem.domain.member.Authority;
 import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.domain.member.Profile;
@@ -51,9 +52,23 @@ public class ProfileService {
     }
 
     public InfluencerProfileResponseDto getInfluencerProfile(Long profileId) {
-        Profile profile = profileRepository.findById(profileId).orElseThrow(
+        Optional<Member> currentMember = memberRepository.findByEmailFetchLikes(SecurityUtil.getCurrentMemberEmail());
+        Profile profile = profileRepository.findByIdFetch(profileId).orElseThrow(
                 () -> new NotFoundException("프로필(아이디: " + profileId + ")를 찾을 수 없습니다."));
-        return profile.getInfluencerProfile();
+        if (currentMember.isEmpty()) {
+            return profile.getInfluencerProfile(false);
+        }
+        return profile.getInfluencerProfile(currentMember.get().profileIsInLikes(profile));
+    }
+
+    public List<InfluencerProfileResponseDto> getLikeInfluencerProfile() {
+        Member currentMember = memberRepository.findByEmailFetchLikes(SecurityUtil.getCurrentMemberEmail()).orElseThrow(
+                () -> new UnauthorizedException("로그인이 필요합니다"));
+        List<Likes> likes = currentMember.getLikes();
+
+        return likes.stream()
+                .map(l -> l.getProfile().getInfluencerProfile(true))
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -69,7 +84,7 @@ public class ProfileService {
     public InfluencerProfileResponseDto getMyProfile() {
         Profile profile = memberRepository.findByEmailFetchProfile(SecurityUtil.getCurrentMemberEmail()).orElseThrow(
                 () -> new UnauthorizedException("로그인이 필요합니다")).getProfile();
-        return profile.getInfluencerProfile();
+        return profile.getInfluencerProfile(false);
     }
 
     public List<FeedResponseDto> getFeed(String tagName, int page, SortCondition sortCondition) {
