@@ -97,7 +97,7 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공"),
             @ApiResponse(responseCode = "401", description = "로그인이 필요합니다" )
     })
-    @PutMapping("/my-profile/secession")
+    @DeleteMapping("/my-profile/secession")
     public ResponseEntity<Void> secession() {
         memberService.secession();
         return ResponseEntity.noContent().build();

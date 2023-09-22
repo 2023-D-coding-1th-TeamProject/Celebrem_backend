@@ -34,11 +34,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 
 	// database
-<<<<<<< HEAD
-	runtimeOnly 'com.h2database:h2'
-=======
 //	runtimeOnly 'com.h2database:h2'
->>>>>>> 3ed30127e0f9461d7858b3d0903aa8a79b0b459e
 	implementation 'mysql:mysql-connector-java:8.0.33'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 

@@ -41,7 +41,7 @@ public class ProfileController {
 
     @Operation(summary = "메인 페이지 피드")
     @ApiResponse(responseCode = "200", description = "피드 불러오기 성공")
-    @GetMapping("/feed")
+    @GetMapping("/")
     public ResponseEntity<List<FeedResponseDto>> getFeed(@RequestParam(value = "page", defaultValue = "1", required = false) int page, @RequestParam(value = "tagName", required = false)String tagName, @RequestParam(value = "orderBy", defaultValue = "POPULARITY", required = false)SortCondition sortCondition) {
         return ResponseEntity.ok(profileService.getFeed(tagName, page, sortCondition));
     }
