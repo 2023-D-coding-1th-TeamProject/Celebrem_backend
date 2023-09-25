@@ -81,7 +81,6 @@ public class AuthController {
     })
     @PatchMapping("/logout")
     public ResponseEntity<String> logout(@AuthenticationPrincipal User user, @RequestBody TokenDto tokenDto) {
-        System.out.println(user.getAuthorities());
         return ResponseEntity.ok(authService.logout(tokenDto.getAccessToken(), user));
     }
 

@@ -86,7 +86,6 @@ public class AuthService {
     public String logout(String accessToken, User user){
         String username = user.getUsername();
         refreshTokenRepository.deleteRefreshTokenByKey(username);
-
         return "로그아웃에 성공하였습니다.";
     }
 
