@@ -92,6 +92,7 @@ public class Profile extends BaseEntity {
 
     public InfluencerProfileResponseDto getInfluencerProfile(boolean isLike) {
         return new InfluencerProfileResponseDto(
+                this.id,
                 member.getNickname(),
                 member.getEmail(),
                 this.profileImageUrl,

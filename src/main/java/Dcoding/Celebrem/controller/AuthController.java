@@ -80,8 +80,9 @@ public class AuthController {
             @ApiResponse(responseCode = "404", description = "로그인 되지 않은 사용자 정보입니다.")
     })
     @PatchMapping("/logout")
-    public ResponseEntity<String> logout(@AuthenticationPrincipal User user, @RequestBody TokenDto tokenDto) {
-        return ResponseEntity.ok(authService.logout(tokenDto.getAccessToken(), user));
+    public ResponseEntity<Void> logout() {
+        authService.logout();
+        return ResponseEntity.noContent().build();
     }
 
 

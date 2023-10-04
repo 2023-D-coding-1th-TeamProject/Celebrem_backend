@@ -2,6 +2,7 @@ package Dcoding.Celebrem.service;
 
 import Dcoding.Celebrem.common.exception.BadRequestException;
 import Dcoding.Celebrem.common.exception.UnauthorizedException;
+import Dcoding.Celebrem.common.util.SecurityUtil;
 import Dcoding.Celebrem.domain.member.Member;
 import Dcoding.Celebrem.dto.member.MemberCreateRequestDto;
 import Dcoding.Celebrem.dto.token.LoginDto;
@@ -83,10 +84,8 @@ public class AuthService {
     }
 
     @Transactional
-    public String logout(String accessToken, User user){
-        String username = user.getUsername();
-        refreshTokenRepository.deleteRefreshTokenByKey(username);
-        return "로그아웃에 성공하였습니다.";
+    public void logout(){
+        refreshTokenRepository.deleteRefreshTokenByKey(SecurityUtil.getCurrentMemberEmail());
     }
 
     @Transactional

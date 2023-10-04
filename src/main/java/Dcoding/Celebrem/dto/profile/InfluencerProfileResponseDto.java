@@ -9,6 +9,7 @@ import java.util.List;
 @NoArgsConstructor
 public class InfluencerProfileResponseDto {
 
+    Long profileId;
     String nickname;
     String email;
     String instagramId;
@@ -18,7 +19,8 @@ public class InfluencerProfileResponseDto {
     List<String> profileTagNames;
     
 
-    public InfluencerProfileResponseDto(String nickname, String email, String profileImageUrl, String description, String instagramId, boolean isLike, List<String> profileTagNames) {
+    public InfluencerProfileResponseDto(Long profileId, String nickname, String email, String profileImageUrl, String instagramId, String description, boolean isLike, List<String> profileTagNames) {
+        this.profileId = profileId;
         this.nickname = nickname;
         this.email = email;
         this.profileImageUrl = profileImageUrl;
